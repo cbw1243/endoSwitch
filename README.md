@@ -7,9 +7,9 @@ the choice of optimization method.
 
 To install the package, run the following functions in R:
 
-install.packages("devtools") # Run this code if the devtools package is not installed. 
-library(devtools) 
-install_github("cbw1243/endoSwitch")
+install.packages("devtools") # Run this code if the devtools package is not installed.   
+library(devtools)   
+install_github("cbw1243/endoSwitch")  
 
 The package is beta version. Further developments will include the calculation of treatment effects. 
 
