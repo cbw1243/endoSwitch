@@ -41,7 +41,7 @@
 
 endoSwitch <- function(RegData, ManDepVar, SelDepVar, ManCovVar, SelCovVar,
                        method = 'BFGS', start, verbose = FALSE, ...){
-
+  RegData <- as.data.table(RegData)
   if(length(start) != (length(SelCovVar) + 1 + 2*(length(ManCovVar) + 1) + 4))
     stop("wrong number of starting values")
   envir = new.env()
