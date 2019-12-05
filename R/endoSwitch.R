@@ -28,7 +28,9 @@
 #' @param ... Other parameters to be passed to the selected maximization routine.
 #'
 #' @return An object of class 'maxLik". The estimates include parameters in the selection model,
-#' parameters in the main models in two different regimes, and the associated distributional parameters.
+#' parameters in the main models in two different regimes, and the associated distributional parameters. Note
+#' that the distributional parameters have been transformed to facilitate the estimations. Use calcPar function
+#' to get estimates of original parameters.
 #'
 #' @export
 #' @examples
@@ -39,6 +41,8 @@
 #' SelCovVar <- c('Age', 'Perception')
 #' Results <- endoSwitch(ImpactData, ManDepVar, SelDepVar, ManCovVar, SelCovVar)
 #' summary(Results)
+#'
+#' calcPar(Results)
 
 endoSwitch <- function(RegData, ManDepVar, SelDepVar, ManCovVar, SelCovVar,
                        method = 'BFGS', start = NULL, verbose = FALSE, ...){
@@ -50,8 +54,8 @@ endoSwitch <- function(RegData, ManDepVar, SelDepVar, ManCovVar, SelCovVar,
   ParNames <- c(paste0('Select.', SelCovVar), 'Select.Const',
                 paste0('Main.0.', ManCovVar), 'Main.0.Const',
                 paste0('Main.1.', ManCovVar), 'Main.1.Const',
-                'Main.0.Sigma', 'Main.1.Sigma',
-                'Main.0.Rho', 'Main.1.Rho')
+                'Main.0.SigmaX', 'Main.1.SigmaX',
+                'Main.0.RhoX', 'Main.1.RhoX')
 
   assign('RegData', RegData, envir)
   assign('ManDepVar', ManDepVar, envir)

@@ -38,7 +38,9 @@ If NULL, the coefficient estimates from the two-stage estimation will be used.}
 }
 \value{
 An object of class 'maxLik". The estimates include parameters in the selection model,
-parameters in the main models in two different regimes, and the associated distributional parameters.
+parameters in the main models in two different regimes, and the associated distributional parameters. Note
+that the distributional parameters have been transformed to facilitate the estimations. Use calcPar function
+to get estimates of original parameters.
 }
 \description{
 This is the main interface for the endoSwitch package, and the function performs Maximum Likelihood
@@ -65,4 +67,6 @@ ManCovVar <- c('Age')
 SelCovVar <- c('Age', 'Perception')
 Results <- endoSwitch(ImpactData, ManDepVar, SelDepVar, ManCovVar, SelCovVar)
 summary(Results)
+
+calcPar(Results)
 }
