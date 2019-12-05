@@ -13,4 +13,4 @@ install_github("cbw1243/endoSwitch")
 
 The package is beta version. Further developments will include the calculation of treatment effects. 
 
-Contact: Bowen Chen (bwchen@illinois.edu) 
+Contact: Bowen Chen, PhD (bwchen@illinois.edu) 
