@@ -3,3 +3,4 @@
 export(calcPar)
 export(endoSwitch)
 export(endoSwitch2Stage)
+export(treatmentEffect)

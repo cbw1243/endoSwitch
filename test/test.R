@@ -15,8 +15,6 @@ devtools::install_github('cbw1243/endoSwitch')
 library(endoSwitch)
 ?endoSwitch
 
-
-
-
+treatmentEffect(Results, ImpactData, ManDepVar, SelDepVar, ManCovVar, SelCovVar)
 
 
