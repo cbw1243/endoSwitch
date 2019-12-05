@@ -22,7 +22,8 @@
 #' @param ManCovVar Independent variables in the main model.
 #' @param SelCovVar Independent variable in the selection model
 #' @param method Maximization method.
-#' @param start Numeric vector used as initial value of parameters for maximization purpose (including the constants)
+#' @param start Numeric vector used as initial value of parameters for maximization purpose.
+#' If NULL, the coefficient estimates from the two-stage estimation will be used.
 #' @param verbose Print the log likelihood values during the optimization? TRUE or FALSE
 #' @param ... Other parameters to be passed to the selected maximization routine.
 #'
@@ -32,19 +33,17 @@
 #' @export
 #' @examples
 #' data(ImpactData)
-#' ManDepVar <- 'Output(ton)'
+#' ManDepVar <- 'Output'
 #' SelDepVar <- 'CA'
-#' ManCovVar <- c('Age (years)')
-#' SelCovVar <- c('Age (years)', 'Perception (1,0)')
-#' Results <- endoSwitch(ImpactData, ManDepVar, SelDepVar, ManCovVar, SelCovVar,
-#' start = c(-0.007, 2.15, -0.2, 0.0007, 1.6, 0.0058, 2.6, 0.5, 0.5, -0.1, 0.2))
+#' ManCovVar <- c('Age')
+#' SelCovVar <- c('Age', 'Perception')
+#' Results <- endoSwitch(ImpactData, ManDepVar, SelDepVar, ManCovVar, SelCovVar)
 #' summary(Results)
 
 endoSwitch <- function(RegData, ManDepVar, SelDepVar, ManCovVar, SelCovVar,
-                       method = 'BFGS', start, verbose = FALSE, ...){
-  RegData <- as.data.table(RegData)
-  if(length(start) != (length(SelCovVar) + 1 + 2*(length(ManCovVar) + 1) + 4))
-    stop("wrong number of starting values")
+                       method = 'BFGS', start = NULL, verbose = FALSE, ...){
+  RegData <- data.table::as.data.table(RegData)
+
   envir = new.env()
   environment(maxLogFunc) = envir
 
@@ -65,6 +64,20 @@ endoSwitch <- function(RegData, ManDepVar, SelDepVar, ManCovVar, SelCovVar,
   assign('TotParNum', 2*(length(ManCovVar) + 1) + length(SelCovVar) + 1 + 4, envir)
 
   assign('verbose', verbose, envir)
+
+  if(is.null(start)){
+    twostage.results <- endoSwitch2Stage(ImpactData, ManDepVar, SelDepVar, ManCovVar, SelCovVar)
+    start <- c(coefficients(twostage.results$FirstStageReg)[-1], coefficients(twostage.results$FirstStageReg)[1],
+              coefficients(twostage.results$SecondStageReg_NoAdopt)[2:(length(ManCovVar)+1)],
+              coefficients(twostage.results$SecondStageReg_NoAdopt)[1],
+              coefficients(twostage.results$SecondStageReg_Adopt)[2:(length(ManCovVar)+1)],
+              coefficients(twostage.results$SecondStageReg_Adopt)[1],
+              1, 1, 0, 0)
+  }
+
+  if(length(start) != (length(SelCovVar) + 1 + 2*(length(ManCovVar) + 1) + 4))
+    stop("wrong number of starting values")
+
   mle.results <- maxLik::maxLik(maxLogFunc, start = start, method = method, ...)
   names(mle.results$estimate) <- names(mle.results$gradient) <- ParNames
   rownames(mle.results$hessian) <- colnames(mle.results$hessian) <- ParNames

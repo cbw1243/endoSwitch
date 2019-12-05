@@ -11,7 +11,7 @@ endoSwitch(
   ManCovVar,
   SelCovVar,
   method = "BFGS",
-  start,
+  start = NULL,
   verbose = FALSE,
   ...
 )
@@ -29,7 +29,8 @@ endoSwitch(
 
 \item{method}{Maximization method.}
 
-\item{start}{Numeric vector used as initial value of parameters for maximization purpose (including the constants)}
+\item{start}{Numeric vector used as initial value of parameters for maximization purpose.
+If NULL, the coefficient estimates from the two-stage estimation will be used.}
 
 \item{verbose}{Print the log likelihood values during the optimization? TRUE or FALSE}
 
@@ -58,11 +59,10 @@ rho in main model with SelDepVar = 0, rho in main model with SelDepVar = 1.
 }
 \examples{
 data(ImpactData)
-ManDepVar <- 'Output(ton)'
+ManDepVar <- 'Output'
 SelDepVar <- 'CA'
-ManCovVar <- c('Age (years)')
-SelCovVar <- c('Age (years)', 'Perception (1,0)')
-Results <- endoSwitch(ImpactData, ManDepVar, SelDepVar, ManCovVar, SelCovVar,
-start = c(-0.007, 2.15, -0.2, 0.0007, 1.6, 0.0058, 2.6, 0.5, 0.5, -0.1, 0.2))
+ManCovVar <- c('Age')
+SelCovVar <- c('Age', 'Perception')
+Results <- endoSwitch(ImpactData, ManDepVar, SelDepVar, ManCovVar, SelCovVar)
 summary(Results)
 }

@@ -29,14 +29,14 @@
 #' summary(Results$SecondStageReg_Adopt)
 
 endoSwitch2Stage <- function(RegData, ManDepVar, SelDepVar, ManCovVar, SelCovVar){
-  RegData <- as.data.table(RegData)
+  RegData <- data.table::as.data.table(RegData)
   # Adopters
   AdtObs <- which(RegData[, SelDepVar, with = F] == 1)
 
   # First stage estimation
   RegS1Formula <- as.formula(paste0(SelDepVar, '~', paste(SelCovVar, collapse = '+')))
 
-  RegS1 <- glm(RegS1Formula, data = RegData, family = binomial(link = 'probit'))
+  RegS1 <- stats::glm(RegS1Formula, data = RegData, family = binomial(link = 'probit'))
 
   # Second stage estimation
   MillsRatioAdt1 <- dnorm(predict(RegS1, ImpactData[AdtObs, ]))/pnorm(predict(RegS1, ImpactData[AdtObs, ]))
