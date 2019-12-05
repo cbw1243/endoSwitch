@@ -4,8 +4,17 @@
 \alias{endoSwitch}
 \title{Endogenous switching regression}
 \usage{
-endoSwitch(RegData, ManDepVar, SelDepVar, ManCovVar, SelCovVar,
-  method = "BFGS", start, verbose = FALSE, ...)
+endoSwitch(
+  RegData,
+  ManDepVar,
+  SelDepVar,
+  ManCovVar,
+  SelCovVar,
+  method = "BFGS",
+  start,
+  verbose = FALSE,
+  ...
+)
 }
 \arguments{
 \item{RegData}{Data for doing the regression analysis}
@@ -53,6 +62,7 @@ ManDepVar <- 'Output(ton)'
 SelDepVar <- 'CA'
 ManCovVar <- c('Age (years)')
 SelCovVar <- c('Age (years)', 'Perception (1,0)')
-endoSwitch(ImpactData, ManDepVar, SelDepVar, ManCovVar, SelCovVar,
+Results <- endoSwitch(ImpactData, ManDepVar, SelDepVar, ManCovVar, SelCovVar,
 start = c(-0.007, 2.15, -0.2, 0.0007, 1.6, 0.0058, 2.6, 0.5, 0.5, -0.1, 0.2))
+summary(Results)
 }

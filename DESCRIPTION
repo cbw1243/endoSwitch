@@ -7,9 +7,8 @@ Maintainer: Bowen Chen <bwchen0719@gmail.com>
 Description: Estimate endogenous switching model using Maximum Likelihood estimation method
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 6.1.1
+RoxygenNote: 7.0.2
 Imports: 
         data.table,
         maxLik,
         dplyr
-
