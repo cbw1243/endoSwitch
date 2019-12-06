@@ -34,19 +34,19 @@ endoSwitch2Stage <- function(RegData, ManDepVar, SelDepVar, ManCovVar, SelCovVar
   AdtObs <- which(RegData[, SelDepVar, with = F] == 1)
 
   # First stage estimation
-  RegS1Formula <- as.formula(paste0(SelDepVar, '~', paste(SelCovVar, collapse = '+')))
+  RegS1Formula <- stats::as.formula(paste0(SelDepVar, '~', paste(SelCovVar, collapse = '+')))
 
-  RegS1 <- stats::glm(RegS1Formula, data = RegData, family = binomial(link = 'probit'))
+  RegS1 <- stats::glm(RegS1Formula, data = RegData, family = stats::binomial(link = 'probit'))
 
   # Second stage estimation
-  MillsRatioAdt1 <- dnorm(predict(RegS1, ImpactData[AdtObs, ]))/pnorm(predict(RegS1, ImpactData[AdtObs, ]))
-  MillsRatioAdt0 <- dnorm(predict(RegS1, ImpactData[-AdtObs, ]))/(1-pnorm(predict(RegS1, ImpactData[-AdtObs, ])))
+  MillsRatioAdt1 <- stats::dnorm(stats::predict(RegS1, ImpactData[AdtObs, ]))/stats::pnorm(stats::predict(RegS1, ImpactData[AdtObs, ]))
+  MillsRatioAdt0 <- stats::dnorm(stats::predict(RegS1, ImpactData[-AdtObs, ]))/(1-stats::pnorm(stats::predict(RegS1, ImpactData[-AdtObs, ])))
 
-  RegS2Formula_Adt1 <- as.formula(paste0(ManDepVar, '~', paste(ManCovVar, collapse = '+'), '+', 'MillsRatioAdt1'))
-  RegS2_Adt1 <- lm(RegS2Formula_Adt1, data = RegData[AdtObs, ])
+  RegS2Formula_Adt1 <- stats::as.formula(paste0(ManDepVar, '~', paste(ManCovVar, collapse = '+'), '+', 'MillsRatioAdt1'))
+  RegS2_Adt1 <- stats::lm(RegS2Formula_Adt1, data = RegData[AdtObs, ])
 
-  RegS2Formula_Adt0 <- as.formula(paste0(ManDepVar, '~', paste(ManCovVar, collapse = '+'), '+', 'MillsRatioAdt0'))
-  RegS2_Adt0 <- lm(RegS2Formula_Adt0, data = RegData[-AdtObs, ])
+  RegS2Formula_Adt0 <- stats::as.formula(paste0(ManDepVar, '~', paste(ManCovVar, collapse = '+'), '+', 'MillsRatioAdt0'))
+  RegS2_Adt0 <- stats::lm(RegS2Formula_Adt0, data = RegData[-AdtObs, ])
 
   Results <- list(FirstStageReg = RegS1,
                   SecondStageReg_NoAdopt = RegS2_Adt0,

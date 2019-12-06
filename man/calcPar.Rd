@@ -7,13 +7,15 @@
 calcPar(Results)
 }
 \arguments{
-\item{Results}{An maxLik object estimated from endoSwitch}
+\item{Results}{A maxLik object that is estimated by the \code{endoSwitch} function.}
 }
 \value{
-A matrix that provides estimates, standard errors, and z values.
+A matrix that reports the estimates of original distribution parameters. sigma is standard deviation,
+and rho is correlation coefficient.
 }
 \description{
-This R function gives estimates of sigma and rho from an estimated model
+This R function provides estimates of original distribution parameters (sigma and rho) from the estimates of
+transformed distribution parameters using the delta method.
 }
 \examples{
 data(ImpactData)
@@ -22,7 +24,6 @@ SelDepVar <- 'CA'
 ManCovVar <- c('Age')
 SelCovVar <- c('Age', 'Perception')
 Results <- endoSwitch(ImpactData, ManDepVar, SelDepVar, ManCovVar, SelCovVar)
-summary(Results)
 
 calcPar(Results)
 

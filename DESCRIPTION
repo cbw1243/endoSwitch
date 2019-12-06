@@ -3,16 +3,14 @@ Type: Package
 Title: Endogenous switching regression estimation
 Version: 1.0.0
 Author: Bowen Chen
-Author@R: person('Bowen', 'Chen', email = 'bwchen0719@gmail.com', 
-role = c("aut, "cre""), comment = c(ORCID = "0000-0003-0370-2756"))
+Author@R: person('Bowen', 'Chen', email = 'bwchen0719@gmail.com', role = c("aut, "cre""), comment = c(ORCID = "0000-0003-0370-2756"))
 Maintainer: Bowen Chen <bwchen0719@gmail.com>
-Description: This package estimates endogenous switching regression models using the full
-maximum likelihood estimation method and calculates treatment effects.  
+Description: This package estimates endogenous switching regression models using the full maximum likelihood estimation method and calculates treatment effects.  
 Encoding: UTF-8
 License: GPL-2
 LazyData: true
 RoxygenNote: 7.0.2
-Depends: R (>= 3.6.1)
+Depends: R (>= 3.6.0)
 URL: https://github.com/cbw1243/endoSwitch 
 Imports: 
         data.table (>= 1.12.2),

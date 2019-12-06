@@ -20,10 +20,12 @@ treatmentEffect(Results, RegData, ManDepVar, SelDepVar, ManCovVar, SelCovVar)
 \item{SelCovVar}{Independent variable in the selection model}
 }
 \value{
-A list containing regression results.
+A matrix that reports the calculated average treatment effects.
 }
 \description{
-This function calculates treatment effects from an estimated endogenous switching regression model.
+This function calculates average treatment effects from an estimated endogenous switching regression model,
+including average treatment effects, average treatment effects on the treated, average treatment effects on
+the untreated.
 }
 \examples{
 data(ImpactData)
@@ -31,6 +33,11 @@ ManDepVar <- 'Output'
 SelDepVar <- 'CA'
 ManCovVar <- c('Age')
 SelCovVar <- c('Age', 'Perception')
-Results <- endoSwitch2Stage(ImpactData, ManDepVar, SelDepVar, ManCovVar, SelCovVar)
+Results <- endoSwitch(ImpactData, ManDepVar, SelDepVar, ManCovVar, SelCovVar)
 treatmentEffect(Results, ImpactData, ManDepVar, SelDepVar, ManCovVar, SelCovVar)
+}
+\references{
+Abdulai (2016) Impact of conservation agriculture technology on
+household welfare in Zambia. \emph{Agricultural Economics} 47:729-741
+(\href{https://onlinelibrary.wiley.com/doi/abs/10.1111/agec.12269}{link here})
 }

@@ -1,11 +1,12 @@
 #' Endogenous switching regression
 #'
-#' This R function gives estimates of sigma and rho from an estimated model
+#' This R function provides estimates of original distribution parameters (sigma and rho) from the estimates of
+#' transformed distribution parameters using the delta method.
 #'
+#' @param Results A maxLik object that is estimated by the \code{endoSwitch} function.
 #'
-#' @param Results An maxLik object estimated from endoSwitch
-#'
-#' @return A matrix that provides estimates, standard errors, and z values.
+#' @return A matrix that reports the estimates of original distribution parameters. sigma is standard deviation,
+#' and rho is correlation coefficient.
 #'
 #' @export
 #' @examples
@@ -15,14 +16,13 @@
 #' ManCovVar <- c('Age')
 #' SelCovVar <- c('Age', 'Perception')
 #' Results <- endoSwitch(ImpactData, ManDepVar, SelDepVar, ManCovVar, SelCovVar)
-#' summary(Results)
 #'
 #' calcPar(Results)
 #'
 calcPar <- function(Results){
 
-  VarCov <- solve(-Results$hessian)
-  coefEst <- coefficients(Results)
+  VarCov <- base::solve(-Results[['hessian']])
+  coefEst <- stats::coef(Results)
 
   SigmaNum <- grep('Sigma', names(coefEst))
   SigmaSD <- sqrt(diag(VarCov)[SigmaNum])

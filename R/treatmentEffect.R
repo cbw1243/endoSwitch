@@ -1,6 +1,8 @@
 #' Endogenous switching regression
 #'
-#' This function calculates treatment effects from an estimated endogenous switching regression model.
+#' This function calculates average treatment effects from an estimated endogenous switching regression model,
+#' including average treatment effects, average treatment effects on the treated, average treatment effects on
+#' the untreated.
 #'
 #' @param Results Estimated endogenous switching regression model
 #' @param RegData Data for doing the regression analysis
@@ -9,7 +11,11 @@
 #' @param ManCovVar Independent variables in the main model.
 #' @param SelCovVar Independent variable in the selection model
 #'
-#' @return A list containing regression results.
+#'@references Abdulai (2016) Impact of conservation agriculture technology on
+#'household welfare in Zambia. \emph{Agricultural Economics} 47:729-741
+#' (\href{https://onlinelibrary.wiley.com/doi/abs/10.1111/agec.12269}{link here})
+#'
+#' @return A matrix that reports the calculated average treatment effects.
 #'
 #' @export
 #' @examples
@@ -18,7 +24,7 @@
 #' SelDepVar <- 'CA'
 #' ManCovVar <- c('Age')
 #' SelCovVar <- c('Age', 'Perception')
-#' Results <- endoSwitch2Stage(ImpactData, ManDepVar, SelDepVar, ManCovVar, SelCovVar)
+#' Results <- endoSwitch(ImpactData, ManDepVar, SelDepVar, ManCovVar, SelCovVar)
 #' treatmentEffect(Results, ImpactData, ManDepVar, SelDepVar, ManCovVar, SelCovVar)
 
 treatmentEffect <- function(Results, RegData, ManDepVar, SelDepVar, ManCovVar, SelCovVar){
@@ -36,30 +42,30 @@ treatmentEffect <- function(Results, RegData, ManDepVar, SelDepVar, ManCovVar, S
   TE <- CovVarData %*% matrix(ParApt1 - ParApt0)
   # Average treatment effect
   ATE <- mean(TE)
-  ATE_SD <- sd(TE)
+  ATE_SD <- stats::sd(TE)
 
   # Treatment effect on the treated
   TreatedObs <- which(ImpactData[, SelDepVar, with = F] == 1)
   SelPar <- matrix(Results$estimate[paste0('Select.', SelCovVar)], ncol = 1)
 
   SelCovDataTreated <- as.matrix(ImpactData[TreatedObs, SelCovVar, with = F])
-  MillsRatioTreated <- dnorm(SelCovDataTreated %*% SelPar)/pnorm(SelCovDataTreated %*% SelPar)
+  MillsRatioTreated <- stats::dnorm(SelCovDataTreated %*% SelPar)/stats::pnorm(SelCovDataTreated %*% SelPar)
 
   SelCovDataUnTreated <- as.matrix(ImpactData[-TreatedObs, SelCovVar, with = F])
-  MillsRatioUnTreated <- -dnorm(SelCovDataUnTreated %*% SelPar)/(1-pnorm(SelCovDataUnTreated %*% SelPar))
+  MillsRatioUnTreated <- -stats::dnorm(SelCovDataUnTreated %*% SelPar)/(1-stats::pnorm(SelCovDataUnTreated %*% SelPar))
 
   TT <- CovVarData[TreatedObs,] %*% matrix(ParApt1 - ParApt0) +
     (DistParEst[4, 1]*DistParEst[2, 1] - DistParEst[3, 1]*DistParEst[1, 1])*MillsRatioTreated
 
   ATT <- mean(TT)
-  ATT_SD <- sd(TT)
+  ATT_SD <- stats::sd(TT)
 
   # Treatment effect on the untreated
   TU <- CovVarData[-TreatedObs,] %*% matrix(ParApt1 - ParApt0) +
     (DistParEst[4, 1]*DistParEst[2, 1] - DistParEst[3, 1]*DistParEst[1, 1])*MillsRatioUnTreated
 
   ATU <- mean(TU)
-  ATU_SD <- sd(TU)
+  ATU_SD <- stats::sd(TU)
 
   effectM <-
     matrix(c(ATE, ATE_SD, ATE/ATE_SD,

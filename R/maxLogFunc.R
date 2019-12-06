@@ -29,7 +29,6 @@ maxLogFunc <- function(param){
   eta1 <- (SelCovSum1 + rho1*ManRes1/sigma1)/sqrt(1-rho1^2)
   eta0 <- (SelCovSum0 + rho0*ManRes0/sigma0)/sqrt(1-rho0^2)
 
-  LogLike <- sum(log(pnorm(eta1)) + log(dnorm(ManRes1/sigma1)/sigma1)) + sum(log(1 - pnorm(eta0)) + log(dnorm(ManRes0/sigma0)/sigma0))
-  if(isTRUE(verbose)) cat('Log likelihood value is:',LogLike, '\r')
+  LogLike <- sum(log(stats::pnorm(eta1)) + log(stats::dnorm(ManRes1/sigma1)/sigma1)) + sum(log(1 - stats::pnorm(eta0)) + log(stats::dnorm(ManRes0/sigma0)/sigma0))
   LogLike
 }
