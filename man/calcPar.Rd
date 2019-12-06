@@ -17,14 +17,3 @@ and rho is correlation coefficient.
 This R function provides estimates of original distribution parameters (sigma and rho) from the estimates of
 transformed distribution parameters using the delta method.
 }
-\examples{
-data(ImpactData)
-ManDepVar <- 'Output'
-SelDepVar <- 'CA'
-ManCovVar <- c('Age')
-SelCovVar <- c('Age', 'Perception')
-Results <- endoSwitch(ImpactData, ManDepVar, SelDepVar, ManCovVar, SelCovVar)
-
-calcPar(Results)
-
-}

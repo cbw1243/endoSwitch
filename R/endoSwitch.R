@@ -27,17 +27,22 @@
 #' @param SelDepVar character. Dependent variable in the selection model. The variable must be binary (0 or 1).
 #' @param ManCovVar character vector. Independent variables in the main model.
 #' @param SelCovVar character vector. Independent variable in the selection model.
+#' @param treatEffect TRUE/FALSE. Choose to show the average treatment effects or not.
+#' @param trans TRUE/FALSE. Choose to show the estimates of original distributional parameters or not.
 #' @param method character. Maximization method to be used. The default is "BFGS" (for Broyden-Fletcher-Goldfarb-Shanno).
 #' Other methods can also be used. See \code{\link{maxLik}}.
 #' @param start optional numeric vector. Used as initial values of parameters for maximization purpose.
 #' If NULL, the coefficient estimates from the two-stage estimation will be used.
-#' @param verbose TRUE/FALSE. Showing the status of the optimization function.
+#' @param verbose TRUE/FALSE. Choose to show the status of optimization or not.
 #' @param ... Other parameters to be passed to the selected maximization routine.
 #'
-#' @return An object of class "maxLik". The estimates include parameters in the selection equation,
-#' parameters in the main equations, and the associated distributional parameters. Note
-#' that the distributional parameters have been transformed to facilitate the estimations. Use \code{calcPar} function
-#' to get estimates of original parameters.
+#' @return A list containing three elements. The first element is an object of class "maxLik". The estimates include parameters in the selection equation,
+#' parameters in the main equations, and the associated transformed distributional parameters. Note
+#' that the distributional parameters have been transformed to facilitate the estimations, as recommended by Lokshin and Sajaia (2004).
+#' As a default option, \code{endoSwitch} reports estimates of the distributional parameters by transforming them back to
+#' origial forms using the Delta method. The second element contains the estimates of
+#' distributional parameters.  The third element contains the treatment effects.
+#'
 #'
 #' @references Lokshin and Sajaia (2004). Maximum-likelihood estimation of endogenous
 #' switching regression models. \emph{The Stata Journal}.
@@ -52,12 +57,15 @@
 #' ManCovVar <- c('Age')
 #' SelCovVar <- c('Age', 'Perception')
 #' Results <- endoSwitch(ImpactData, ManDepVar, SelDepVar, ManCovVar, SelCovVar)
-#' summary(Results) # Sigma and Rho are transformed values.
+#' summary(Results$MLE.Results) # Sigma and Rho are transformed values.
 #'
-#' calcPar(Results) # Obtain the original parameters
+#' Results$distPar # Obtain the original distributional parameters
+#'
+#' Results$treatEffect # Obtain the treatment effect
 
 endoSwitch <- function(RegData, ManDepVar, SelDepVar, ManCovVar, SelCovVar,
-                       method = 'BFGS', start = NULL, verbose = FALSE, ...){
+                       treatEffect = TRUE, trans = TRUE, method = 'BFGS', start = NULL,
+                       verbose = FALSE, ...){
   if(sum(ManDepVar %in% colnames(RegData)) != length(ManDepVar))
     stop("ManDepVar must be valid column names in the dataset.")
 
@@ -126,5 +134,20 @@ endoSwitch <- function(RegData, ManDepVar, SelDepVar, ManCovVar, SelCovVar,
   names(mle.results$estimate) <- names(mle.results$gradient) <- ParNames
   rownames(mle.results$hessian) <- colnames(mle.results$hessian) <- ParNames
   if(isTRUE(verbose)) cat('Searching completed.', '\r')
-  mle.results
+
+  if(isTRUE(treatEffect)){
+    treatEffectResult <- treatmentEffect(mle.results, ImpactData, ManDepVar, SelDepVar, ManCovVar, SelCovVar)
+  }else{
+    treatEffectResult <- 'Treatment effects are not calculated. Use treatEffect = TRUE to get them.'
+  }
+
+  if(isTRUE(trans)){
+    distPar = calcPar(mle.results)
+  }else{
+    cat('Caution: Distributional parameters have been transformed. Use trans = TRUE to recover original estimates.')
+    distPar <- NULL
+  }
+
+  out <- list(MLE.Results = mle.results, distPar = distPar, treatEffect = treatEffectResult)
+  out
 }

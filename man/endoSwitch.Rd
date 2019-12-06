@@ -10,6 +10,8 @@ endoSwitch(
   SelDepVar,
   ManCovVar,
   SelCovVar,
+  treatEffect = TRUE,
+  trans = TRUE,
   method = "BFGS",
   start = NULL,
   verbose = FALSE,
@@ -27,21 +29,27 @@ endoSwitch(
 
 \item{SelCovVar}{character vector. Independent variable in the selection model.}
 
+\item{treatEffect}{TRUE/FALSE. Choose to show the average treatment effects or not.}
+
+\item{trans}{TRUE/FALSE. Choose to show the estimates of original distributional parameters or not.}
+
 \item{method}{character. Maximization method to be used. The default is "BFGS" (for Broyden-Fletcher-Goldfarb-Shanno).
 Other methods can also be used. See \code{\link{maxLik}}.}
 
 \item{start}{optional numeric vector. Used as initial values of parameters for maximization purpose.
 If NULL, the coefficient estimates from the two-stage estimation will be used.}
 
-\item{verbose}{TRUE/FALSE. Showing the status of the optimization function.}
+\item{verbose}{TRUE/FALSE. Choose to show the status of optimization or not.}
 
 \item{...}{Other parameters to be passed to the selected maximization routine.}
 }
 \value{
-An object of class "maxLik". The estimates include parameters in the selection equation,
-parameters in the main equations, and the associated distributional parameters. Note
-that the distributional parameters have been transformed to facilitate the estimations. Use \code{calcPar} function
-to get estimates of original parameters.
+A list containing three elements. The first element is an object of class "maxLik". The estimates include parameters in the selection equation,
+parameters in the main equations, and the associated transformed distributional parameters. Note
+that the distributional parameters have been transformed to facilitate the estimations, as recommended by Lokshin and Sajaia (2004).
+As a default option, \code{endoSwitch} reports estimates of the distributional parameters by transforming them back to
+origial forms using the Delta method. The second element contains the estimates of
+distributional parameters.  The third element contains the treatment effects.
 }
 \description{
 This is the main interface for the endoSwitch package, and the function performs full maximum likelihood
@@ -73,9 +81,11 @@ SelDepVar <- 'CA'
 ManCovVar <- c('Age')
 SelCovVar <- c('Age', 'Perception')
 Results <- endoSwitch(ImpactData, ManDepVar, SelDepVar, ManCovVar, SelCovVar)
-summary(Results) # Sigma and Rho are transformed values.
+summary(Results$MLE.Results) # Sigma and Rho are transformed values.
 
-calcPar(Results) # Obtain the original parameters
+Results$distPar # Obtain the original distributional parameters
+
+Results$treatEffect # Obtain the treatment effect
 }
 \references{
 Lokshin and Sajaia (2004). Maximum-likelihood estimation of endogenous

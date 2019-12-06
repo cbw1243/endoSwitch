@@ -27,15 +27,6 @@ This function calculates average treatment effects from an estimated endogenous 
 including average treatment effects, average treatment effects on the treated, average treatment effects on
 the untreated.
 }
-\examples{
-data(ImpactData)
-ManDepVar <- 'Output'
-SelDepVar <- 'CA'
-ManCovVar <- c('Age')
-SelCovVar <- c('Age', 'Perception')
-Results <- endoSwitch(ImpactData, ManDepVar, SelDepVar, ManCovVar, SelCovVar)
-treatmentEffect(Results, ImpactData, ManDepVar, SelDepVar, ManCovVar, SelCovVar)
-}
 \references{
 Abdulai (2016) Impact of conservation agriculture technology on
 household welfare in Zambia. \emph{Agricultural Economics} 47:729-741

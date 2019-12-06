@@ -16,16 +16,7 @@
 #' (\href{https://onlinelibrary.wiley.com/doi/abs/10.1111/agec.12269}{link here})
 #'
 #' @return A matrix that reports the calculated average treatment effects.
-#'
-#' @export
-#' @examples
-#' data(ImpactData)
-#' ManDepVar <- 'Output'
-#' SelDepVar <- 'CA'
-#' ManCovVar <- c('Age')
-#' SelCovVar <- c('Age', 'Perception')
-#' Results <- endoSwitch(ImpactData, ManDepVar, SelDepVar, ManCovVar, SelCovVar)
-#' treatmentEffect(Results, ImpactData, ManDepVar, SelDepVar, ManCovVar, SelCovVar)
+
 
 treatmentEffect <- function(Results, RegData, ManDepVar, SelDepVar, ManCovVar, SelCovVar){
   # Estimate treatment effects.
