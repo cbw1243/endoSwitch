@@ -1,9 +1,10 @@
 #' Endogenous switching regression
 #'
-#' This function estimates the endogenous switching regression model through two-stage regression following Heckman et al. (2001).
-#' The estimation procedures are described in
+#' This function estimates the endogenous switching regression model through two-stage regression.
+#' The estimation procedures are described in Heckman et al. (2001). The \code{endoSwitch} function is
+#' preferred than this function for estimation.
 #'
-#' The first stage uses a probit model to estimate the selection equation. The second stage uses OLS to estimate the main equations.
+#' The first stage uses a probit model to estimate the selection equation. The second stage uses OLS, plus the inverse mills ratios to estimate the main equations.
 #'
 #' @param RegData Data for doing the regression analysis
 #' @param ManDepVar Dependent variable in the main model
@@ -11,6 +12,9 @@
 #' @param ManCovVar Independent variables in the main model.
 #' @param SelCovVar Independent variable in the selection model
 #'
+#' @references Heckman, Tobias, and Vytlacil (2001). Four parameters of interest in the evaluation of
+#' social programs. \emph{Southern Economic Journal}.
+
 #' @return A list containing regression results.
 #'
 #' @export
