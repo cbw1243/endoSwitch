@@ -73,10 +73,10 @@ endoSwitch <- function(RegData, OutcomeDep, SelectDep, OutcomeCov, SelectCov,
     stop("OutcomeCov must be valid column names in the dataset.")
 
   if(sum(SelectDep %in% colnames(RegData)) != length(SelectDep))
-    stop("OutcomeCov must be valid column names in the dataset.")
+    stop("SelectDep must be valid column names in the dataset.")
 
   if(sum(SelectCov %in% colnames(RegData)) != length(SelectCov))
-    stop("OutcomeCov must be valid column names in the dataset.")
+    stop("SelectCov must be valid column names in the dataset.")
 
   if(nrow(RegData) < length(OutcomeCov) + length(SelectCov))
     stop('Too few observations.')
@@ -118,14 +118,19 @@ endoSwitch <- function(RegData, OutcomeDep, SelectDep, OutcomeCov, SelectCov,
 
   if(is.null(start)){
     twostage.results <- endoSwitch2Stage(RegData, OutcomeDep, SelectDep, OutcomeCov, SelectCov)
+    rho0EstX <- ifelse(twostage.results$distParEst['rho0'] > 1, 1,
+                                                  ifelse(twostage.results$distParEst['rho0'] < -1, -1, twostage.results$distParEst['rho0']))
+    rho1EstX <- ifelse(twostage.results$distParEst['rho1'] > 1, 1,
+                                                  ifelse(twostage.results$distParEst['rho1'] < -1, -1, twostage.results$distParEst['rho1']))
+
     start <- c(stats::coef(twostage.results$FirstStageReg)[-1], stats::coef(twostage.results$FirstStageReg)[1],
                stats::coef(twostage.results$SecondStageReg.0)[2:(length(OutcomeCov)+1)],
                stats::coef(twostage.results$SecondStageReg.0)[1],
                stats::coef(twostage.results$SecondStageReg.1)[2:(length(OutcomeCov)+1)],
                stats::coef(twostage.results$SecondStageReg.1)[1],
-               exp(twostage.results$distParEst['sigma0']),  exp(twostage.results$distParEst['sigma1']),
-               (exp(2*twostage.results$distParEst['rho0']) - 1)/(exp(2*twostage.results$distParEst['rho0']) + 1),
-               (exp(2*twostage.results$distParEst['rho1']) - 1)/(exp(2*twostage.results$distParEst['rho1']) + 1))
+               log(twostage.results$distParEst['sigma0']),  log(twostage.results$distParEst['sigma1']),
+               .5*log((1 + rho0EstX)/(1 - rho0EstX)),
+               .5*log((1 + rho1EstX)/(1 - rho1EstX)))
   }
 
   if(length(start) != (length(SelectCov) + 1 + 2*(length(OutcomeCov) + 1) + 4))
