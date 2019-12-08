@@ -123,7 +123,9 @@ endoSwitch <- function(RegData, OutcomeDep, SelectDep, OutcomeCov, SelectCov,
                stats::coef(twostage.results$SecondStageReg.0)[1],
                stats::coef(twostage.results$SecondStageReg.1)[2:(length(OutcomeCov)+1)],
                stats::coef(twostage.results$SecondStageReg.1)[1],
-               1, 1, 0, 0)
+               exp(twostage.results$distParEst['sigma0']),  exp(twostage.results$distParEst['sigma1']),
+               (exp(2*twostage.results$distParEst['rho0']) - 1)/(exp(2*twostage.results$distParEst['rho0']) + 1),
+               (exp(2*twostage.results$distParEst['rho1']) - 1)/(exp(2*twostage.results$distParEst['rho1']) + 1))
   }
 
   if(length(start) != (length(SelectCov) + 1 + 2*(length(OutcomeCov) + 1) + 4))

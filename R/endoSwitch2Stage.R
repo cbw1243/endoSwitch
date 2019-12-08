@@ -51,7 +51,7 @@ endoSwitch2Stage <- function(RegData, OutcomeDep, SelectDep, OutcomeCov, SelectC
 
   # Second stage estimation
   MillsRatioAdt1 <- stats::dnorm(stats::predict(RegS1, RegData[AdtObs, ]))/stats::pnorm(stats::predict(RegS1, RegData[AdtObs, ]))
-  MillsRatioAdt0 <- stats::dnorm(stats::predict(RegS1, RegData[-AdtObs, ]))/(1-stats::pnorm(stats::predict(RegS1, RegData[-AdtObs, ])))
+  MillsRatioAdt0 <- -stats::dnorm(stats::predict(RegS1, RegData[-AdtObs, ]))/(1-stats::pnorm(stats::predict(RegS1, RegData[-AdtObs, ])))
 
   RegS2Formula_Adt1 <- stats::as.formula(paste0(OutcomeDep, '~', paste(OutcomeCov, collapse = '+'), '+', 'MillsRatioAdt1'))
   RegS2_Adt1 <- stats::lm(RegS2Formula_Adt1, data = RegData[AdtObs, ])
@@ -59,8 +59,22 @@ endoSwitch2Stage <- function(RegData, OutcomeDep, SelectDep, OutcomeCov, SelectC
   RegS2Formula_Adt0 <- stats::as.formula(paste0(OutcomeDep, '~', paste(OutcomeCov, collapse = '+'), '+', 'MillsRatioAdt0'))
   RegS2_Adt0 <- stats::lm(RegS2Formula_Adt0, data = RegData[-AdtObs, ])
 
-  Results <- list(FirstStageReg = RegS1,
-                  SecondStageReg.0 = RegS2_Adt0,
-                  SecondStageReg.1 = RegS2_Adt1)
-  return(Results)
+  sigma1Est <- (sum(RegS2_Adt1$residuals^2) +
+                    sum(MillsRatioAdt1*(MillsRatioAdt1 + stats::predict(RegS1, RegData[AdtObs, ])))*stats::coef(RegS2_Adt1)['MillsRatioAdt1'])/length(MillsRatioAdt1)
+  sigma1Est <- sigma1Est^.5
+
+  sigma0Est <- (sum(RegS2_Adt0$residuals^2) +
+                    sum(MillsRatioAdt0*(MillsRatioAdt0 + stats::predict(RegS1, RegData[-AdtObs, ])))*stats::coef(RegS2_Adt0)['MillsRatioAdt0'])/length(MillsRatioAdt0)
+  sigma0Est <- sigma0Est^.5
+
+  rho1Est <- stats::coef(RegS2_Adt1)['MillsRatioAdt1']/sigma1Est
+  rho0Est <- stats::coef(RegS2_Adt0)['MillsRatioAdt0']/sigma0Est
+
+  endoSwitch2SResults <- list(FirstStageReg = RegS1, SecondStageReg.0 = RegS2_Adt0, SecondStageReg.1 = RegS2_Adt1,
+                  distParEst = c(sigma0 = as.numeric(sigma0Est), sigma1 = as.numeric(sigma1Est),
+                                 rho0 = as.numeric(rho0Est), rho1 = as.numeric(rho1Est)))
+  return(endoSwitch2SResults)
 }
+
+
+
