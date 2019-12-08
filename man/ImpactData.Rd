@@ -4,7 +4,7 @@
 \name{ImpactData}
 \alias{ImpactData}
 \title{A dataset on adoption of conservation agriculture in Zambia}
-\format{An object of class \code{data.table} (inherits from \code{data.frame}) with 408 rows and 31 columns.}
+\format{An object of class \code{data.table} (inherits from \code{data.frame}) with 408 rows and 32 columns.}
 \source{
 Abdulai (2016) Impact of conservation agriculture technology on
 household welfare in Zambia. \emph{Agricultural Economics} 47:729-741

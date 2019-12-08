@@ -80,12 +80,12 @@ OutcomeDep <- 'Output'
 SelectDep <- 'CA'
 OutcomeCov <- c('Age')
 SelectCov <- c('Age', 'Perception')
-Results <- endoSwitch(ImpactData, OutcomeDep, SelectDep, OutcomeCov, SelectCov)
-summary(Results$MLE.Results) # Sigma and Rho are transformed values.
+endoReg <- endoSwitch(ImpactData, OutcomeDep, SelectDep, OutcomeCov, SelectCov)
+summary(endoReg$MLE.Results) # Sigma and Rho are transformed values.
 
-Results$distPar # Obtain the original distributional parameters
+endoReg$distPar # Obtain the original distributional parameters
 
-Results$treatEffect # Obtain the treatment effect
+endoReg$treatEffect # Obtain the treatment effect
 }
 \references{
 Lokshin and Sajaia (2004). Maximum-likelihood estimation of endogenous
