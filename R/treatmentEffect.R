@@ -6,10 +6,10 @@
 #'
 #' @param Results Estimated endogenous switching regression model
 #' @param RegData Data for doing the regression analysis
-#' @param ManDepVar Dependent variable in the main model
-#' @param SelDepVar Dependent variable in the selection model. This should be binary (0 or 1).
-#' @param ManCovVar Independent variables in the main model.
-#' @param SelCovVar Independent variable in the selection model
+#' @param OutcomeDepVar Dependent variable in the main model
+#' @param SelectDepVar Dependent variable in the Selection model. This should be binary (0 or 1).
+#' @param OutcomeCovVar Independent variables in the main model.
+#' @param SelectCovVar Independent variable in the Selection model
 #'
 #'@references Abdulai (2016) Impact of conservation agriculture technology on
 #'household welfare in Zambia. \emph{Agricultural Economics} 47:729-741
@@ -18,14 +18,14 @@
 #' @return A matrix that reports the calculated average treatment effects.
 
 
-treatmentEffect <- function(Results, RegData, ManDepVar, SelDepVar, ManCovVar, SelCovVar){
+treatmentEffect <- function(Results, RegData, OutcomeDepVar, SelectDepVar, OutcomeCovVar, SelectCovVar){
   # Estimate treatment effects.
 
   # 1. Treatment effects
-  CovVarData <- as.matrix(RegData[, ManCovVar, with = F])
+  CovVarData <- as.matrix(RegData[, OutcomeCovVar, with = F])
 
-  ParApt0 <- Results$estimate[paste0('Main.0.', ManCovVar)]
-  ParApt1 <- Results$estimate[paste0('Main.1.', ManCovVar)]
+  ParApt0 <- Results$estimate[paste0('Main.0.', OutcomeCovVar)]
+  ParApt1 <- Results$estimate[paste0('Main.1.', OutcomeCovVar)]
 
   DistParEst <- calcPar(Results)
 
@@ -36,14 +36,14 @@ treatmentEffect <- function(Results, RegData, ManDepVar, SelDepVar, ManCovVar, S
   ATE_SD <- stats::sd(TE)
 
   # Treatment effect on the treated
-  TreatedObs <- which(ImpactData[, SelDepVar, with = F] == 1)
-  SelPar <- matrix(Results$estimate[paste0('Select.', SelCovVar)], ncol = 1)
+  TreatedObs <- which(RegData[, SelectDepVar, with = F] == 1)
+  SelectPar <- matrix(Results$estimate[paste0('Select.', SelectCovVar)], ncol = 1)
 
-  SelCovDataTreated <- as.matrix(ImpactData[TreatedObs, SelCovVar, with = F])
-  MillsRatioTreated <- stats::dnorm(SelCovDataTreated %*% SelPar)/stats::pnorm(SelCovDataTreated %*% SelPar)
+  SelectCovDataTreated <- as.matrix(RegData[TreatedObs, SelectCovVar, with = F])
+  MillsRatioTreated <- stats::dnorm(SelectCovDataTreated %*% SelectPar)/stats::pnorm(SelectCovDataTreated %*% SelectPar)
 
-  SelCovDataUnTreated <- as.matrix(ImpactData[-TreatedObs, SelCovVar, with = F])
-  MillsRatioUnTreated <- -stats::dnorm(SelCovDataUnTreated %*% SelPar)/(1-stats::pnorm(SelCovDataUnTreated %*% SelPar))
+  SelectCovDataUnTreated <- as.matrix(RegData[-TreatedObs, SelectCovVar, with = F])
+  MillsRatioUnTreated <- -stats::dnorm(SelectCovDataUnTreated %*% SelectPar)/(1-stats::pnorm(SelectCovDataUnTreated %*% SelectPar))
 
   TT <- CovVarData[TreatedObs,] %*% matrix(ParApt1 - ParApt0) +
     (DistParEst[4, 1]*DistParEst[2, 1] - DistParEst[3, 1]*DistParEst[1, 1])*MillsRatioTreated

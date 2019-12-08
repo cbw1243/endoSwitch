@@ -4,20 +4,27 @@
 \alias{treatmentEffect}
 \title{Endogenous switching regression}
 \usage{
-treatmentEffect(Results, RegData, ManDepVar, SelDepVar, ManCovVar, SelCovVar)
+treatmentEffect(
+  Results,
+  RegData,
+  OutcomeDepVar,
+  SelectDepVar,
+  OutcomeCovVar,
+  SelectCovVar
+)
 }
 \arguments{
 \item{Results}{Estimated endogenous switching regression model}
 
 \item{RegData}{Data for doing the regression analysis}
 
-\item{ManDepVar}{Dependent variable in the main model}
+\item{OutcomeDepVar}{Dependent variable in the main model}
 
-\item{SelDepVar}{Dependent variable in the selection model. This should be binary (0 or 1).}
+\item{SelectDepVar}{Dependent variable in the Selection model. This should be binary (0 or 1).}
 
-\item{ManCovVar}{Independent variables in the main model.}
+\item{OutcomeCovVar}{Independent variables in the main model.}
 
-\item{SelCovVar}{Independent variable in the selection model}
+\item{SelectCovVar}{Independent variable in the Selection model}
 }
 \value{
 A matrix that reports the calculated average treatment effects.

@@ -4,18 +4,18 @@
 \alias{endoSwitch2Stage}
 \title{Endogenous switching regression}
 \usage{
-endoSwitch2Stage(RegData, ManDepVar, SelDepVar, ManCovVar, SelCovVar)
+endoSwitch2Stage(RegData, OutcomeDep, SelectDep, OutcomeCov, SelectCov)
 }
 \arguments{
 \item{RegData}{Data for doing the regression analysis}
 
-\item{ManDepVar}{Dependent variable in the main model}
+\item{OutcomeDep}{Dependent variable in the main model}
 
-\item{SelDepVar}{Dependent variable in the selection model. This should be binary (0 or 1).}
+\item{SelectDep}{Dependent variable in the selection model. This should be binary (0 or 1).}
 
-\item{ManCovVar}{Independent variables in the main model.}
+\item{OutcomeCov}{Independent variables in the main model.}
 
-\item{SelCovVar}{Independent variable in the selection model}
+\item{SelectCov}{Independent variable in the selection model}
 }
 \value{
 A list containing regression results.
@@ -30,17 +30,17 @@ The first stage uses a probit model to estimate the selection equation. The seco
 }
 \examples{
 data(ImpactData)
-ManDepVar <- 'Output'
-SelDepVar <- 'CA'
-ManCovVar <- c('Age')
-SelCovVar <- c('Age', 'Perception')
-Results <- endoSwitch2Stage(ImpactData, ManDepVar, SelDepVar, ManCovVar, SelCovVar)
+OutcomeDep <- 'Output'
+SelectDep <- 'CA'
+OutcomeCov <- c('Age')
+SelectCov <- c('Age', 'Perception')
+Results <- endoSwitch2Stage(ImpactData, OutcomeDep, SelectDep, OutcomeCov, SelectCov)
 # First stage regression results
 summary(Results$FirstStageReg)
 # Second stage regression results -- non-adopter
-summary(Results$SecondStageReg_NoAdopt)
+summary(Results$SecondStageReg.0)
 # Second stage regression results -- adopter
-summary(Results$SecondStageReg_Adopt)
+summary(Results$SecondStageReg.1)
 }
 \references{
 Heckman, Tobias, and Vytlacil (2001). Four parameters of interest in the evaluation of

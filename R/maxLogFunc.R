@@ -3,32 +3,33 @@ maxLogFunc <- function(param){
   rho0 <- (exp(2*param[TotParNum - 1]) - 1)/(exp(2*param[TotParNum - 1]) + 1)
   rho1 <- (exp(2*param[TotParNum]) - 1)/(exp(2*param[TotParNum]) + 1)
 
-  SelParM <- matrix(param[1:SelParNum], SelParNum, 1)
-  SelData <- cbind(as.matrix(RegData[, SelCovVar, with = F]), matrix(1, nrow(RegData), 1))
-  SelCovSum <- SelData %*% SelParM
+  SelectParM <- matrix(param[1:SelectParNum], SelectParNum, 1)
+  SelectData <- cbind(as.matrix(RegData[, SelectCov, with = F]), matrix(1, nrow(RegData), 1))
+  SelectCovSum <- SelectData %*% SelectParM
 
-  SelLabel <- which(RegData[, SelDepVar, with = F] == 1)
+  SelectLabel <- which(RegData[, SelectDep, with = F] == 1)
   # Not treated
-  ManParM0 <- matrix(param[(SelParNum + 1): (SelParNum + ManParNum)], ManParNum, 1)
-  ManData0 <- cbind(as.matrix(RegData[-SelLabel, ManCovVar, with = F]),
-                    matrix(1, nrow(RegData)-length(SelLabel), 1))
-  Man0Sum <- as.vector(ManData0 %*% ManParM0)
+  OutcomeParM0 <- matrix(param[(SelectParNum + 1): (SelectParNum + OutcomeParNum)], OutcomeParNum, 1)
+  OutcomeData0 <- cbind(as.matrix(RegData[-SelectLabel, OutcomeCov, with = F]),
+                    matrix(1, nrow(RegData)-length(SelectLabel), 1))
+  Outcome0Sum <- as.vector(OutcomeData0 %*% OutcomeParM0)
 
   # Treated
-  ManParM1 <- matrix(param[(SelParNum + ManParNum + 1): (SelParNum + 2*ManParNum)], ManParNum, 1)
-  ManData1 <- cbind(as.matrix(RegData[SelLabel, ManCovVar, with = F]),
-                    matrix(1, length(SelLabel), 1))
-  Man1Sum <- as.vector(ManData1 %*% ManParM1)
+  OutcomeParM1 <- matrix(param[(SelectParNum + OutcomeParNum + 1): (SelectParNum + 2*OutcomeParNum)], OutcomeParNum, 1)
+  OutcomeData1 <- cbind(as.matrix(RegData[SelectLabel, OutcomeCov, with = F]),
+                    matrix(1, length(SelectLabel), 1))
+  Outcome1Sum <- as.vector(OutcomeData1 %*% OutcomeParM1)
 
-  SelCovSum0 <- unlist(SelCovSum[-SelLabel, 1]) # Not Treated
-  SelCovSum1 <- unlist(SelCovSum[SelLabel, 1]) # Treated
+  SelectCovSum0 <- unlist(SelectCovSum[-SelectLabel, 1]) # Not Treated
+  SelectCovSum1 <- unlist(SelectCovSum[SelectLabel, 1]) # Treated
 
-  ManRes0 <- unlist(RegData[-SelLabel, ManDepVar, with = F]) - Man0Sum
-  ManRes1 <- unlist(RegData[SelLabel, ManDepVar, with = F]) - Man1Sum
+  OutcomeRes0 <- unlist(RegData[-SelectLabel, OutcomeDep, with = F]) - Outcome0Sum
+  OutcomeRes1 <- unlist(RegData[SelectLabel, OutcomeDep, with = F]) - Outcome1Sum
 
-  eta1 <- (SelCovSum1 + rho1*ManRes1/sigma1)/sqrt(1-rho1^2)
-  eta0 <- (SelCovSum0 + rho0*ManRes0/sigma0)/sqrt(1-rho0^2)
+  eta1 <- (SelectCovSum1 + rho1*OutcomeRes1/sigma1)/sqrt(1-rho1^2)
+  eta0 <- (SelectCovSum0 + rho0*OutcomeRes0/sigma0)/sqrt(1-rho0^2)
 
-  LogLike <- sum(log(stats::pnorm(eta1)) + log(stats::dnorm(ManRes1/sigma1)/sigma1)) + sum(log(1 - stats::pnorm(eta0)) + log(stats::dnorm(ManRes0/sigma0)/sigma0))
-  LogLike
+  LogLike <- sum(log(stats::pnorm(eta1)) + log(stats::dnorm(OutcomeRes1/sigma1)/sigma1)) + sum(log(1 - stats::pnorm(eta0)) + log(stats::dnorm(OutcomeRes0/sigma0)/sigma0))
+  if(isTRUE(envir$verbose)) cat('Searching for Maximum Joint log-likelihood value:', LogLike, '\r')
+  return(LogLike)
 }

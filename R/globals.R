@@ -1,2 +1,2 @@
-utils::globalVariables(c("ImpactData", "ManDepVar", "SelDepVar", "ManCovVar", "SelCovVar",
-                         'TotParNum', 'SelParNum', 'RegData', 'ManParNum'))
+utils::globalVariables(c("OutcomeDep", "SelectDep", "OutcomeCov", "SelectCov",
+                         'TotParNum', 'SelectParNum', 'RegData', 'OutcomeParNum', 'envir'))

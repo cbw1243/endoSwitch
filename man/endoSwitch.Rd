@@ -6,10 +6,10 @@
 \usage{
 endoSwitch(
   RegData,
-  ManDepVar,
-  SelDepVar,
-  ManCovVar,
-  SelCovVar,
+  OutcomeDep,
+  SelectDep,
+  OutcomeCov,
+  SelectCov,
   treatEffect = TRUE,
   trans = TRUE,
   method = "BFGS",
@@ -21,13 +21,13 @@ endoSwitch(
 \arguments{
 \item{RegData}{an data frame. Data for running the regression analysis.}
 
-\item{ManDepVar}{character. Dependent variable in the main model.}
+\item{OutcomeDep}{character. Dependent iable in the main model.}
 
-\item{SelDepVar}{character. Dependent variable in the selection model. The variable must be binary (0 or 1).}
+\item{SelectDep}{character. Dependent iable in the Selection model. The iable must be binary (0 or 1).}
 
-\item{ManCovVar}{character vector. Independent variables in the main model.}
+\item{OutcomeCov}{character vector. Independent iables in the main model.}
 
-\item{SelCovVar}{character vector. Independent variable in the selection model.}
+\item{SelectCov}{character vector. Independent iable in the Selection model.}
 
 \item{treatEffect}{TRUE/FALSE. Choose to show the average treatment effects or not.}
 
@@ -41,10 +41,10 @@ If NULL, the coefficient estimates from the two-stage estimation will be used.}
 
 \item{verbose}{TRUE/FALSE. Choose to show the status of optimization or not.}
 
-\item{...}{Other parameters to be passed to the selected maximization routine.}
+\item{...}{Other parameters to be passed to the Selected maximization routine. See \code{\link{maxLik}}.}
 }
 \value{
-A list containing three elements. The first element is an object of class "maxLik". The estimates include parameters in the selection equation,
+A list containing three elements. The first element is an object of class "maxLik". The estimates include parameters in the Selection equation,
 parameters in the main equations, and the associated transformed distributional parameters. Note
 that the distributional parameters have been transformed to facilitate the estimations, as recommended by Lokshin and Sajaia (2004).
 As a default option, \code{endoSwitch} reports estimates of the distributional parameters by transforming them back to
@@ -57,30 +57,30 @@ estimation of an endogenous switching regression.
 }
 \details{
 This function estimates the endogenous switching regression model using full maximum likelihood estimation
-method. In this model, a selection equation sorts observation units over two different regimes (e.g., treated and
+method. In this model, a Selection equation sorts observation units over two different regimes (e.g., treated and
 not-treated, adopter or non-adopter), and two main equations (also called outcome equations) determine the
-outcome. The estimation of the model relies on joint normality of the error terms in the equation system (the selection
+outcome. The estimation of the model relies on joint normality of the error terms in the equation system (the Selection
 equation + 2 main equations). The model is estimated by maximizing the joint likelihood function, which is provided in
 Lokshin and Sajaia (2004).
 
 The \code{endoSwitch} uses the \code{maxLik} function in the maxLik package to do the optimization.
 
-Note that users can provide starting values for the optimization. Assume that you have M variables (including the constant) in the selection equation,
-and N variables (including the constant) in the main equation.
-Then you need (M + 2*N + 4) starting values. The first M values are for the variables in the
-selection equation (last for the constant), then followed by N values for the main model with SelDepVar = 0,
-and another N values for the main model with SelDepVar = 1.
-The last four values are: sigma in main equation with SelDepVar = 0, sigma in main equation with SelDepVar = 1,
-rho in main equation with SelDepVar = 0, rho in main equation with SelDepVar = 1. If starting values are not provided,
+Note that users can provide starting values for the optimization. Assume that you have M iables (including the constant) in the Selection equation,
+and N iables (including the constant) in the main equation.
+Then you need (M + 2*N + 4) starting values. The first M values are for the iables in the
+Selection equation (last for the constant), then followed by N values for the main model with SelectDep = 0,
+and another N values for the main model with SelectDep = 1.
+The last four values are: sigma in main equation with SelectDep = 0, sigma in main equation with SelectDep = 1,
+rho in main equation with SelectDep = 0, rho in main equation with SelectDep = 1. If starting values are not provided,
 the function will automatically search for reasonal values (usually works).
 }
 \examples{
 data(ImpactData)
-ManDepVar <- 'Output'
-SelDepVar <- 'CA'
-ManCovVar <- c('Age')
-SelCovVar <- c('Age', 'Perception')
-Results <- endoSwitch(ImpactData, ManDepVar, SelDepVar, ManCovVar, SelCovVar)
+OutcomeDep <- 'Output'
+SelectDep <- 'CA'
+OutcomeCov <- c('Age')
+SelectCov <- c('Age', 'Perception')
+Results <- endoSwitch(ImpactData, OutcomeDep, SelectDep, OutcomeCov, SelectCov)
 summary(Results$MLE.Results) # Sigma and Rho are transformed values.
 
 Results$distPar # Obtain the original distributional parameters
@@ -90,6 +90,6 @@ Results$treatEffect # Obtain the treatment effect
 \references{
 Lokshin and Sajaia (2004). Maximum-likelihood estimation of endogenous
 switching regression models. \emph{The Stata Journal}.
-Heckman, Tobias, and Vytlacil (2001). Four parameters of interest in the evaluation of
+HeckOutcome, Tobias, and Vytlacil (2001). Four parameters of interest in the evaluation of
 social programs. \emph{Southern Economic Journal}.
 }

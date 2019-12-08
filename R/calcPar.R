@@ -11,7 +11,7 @@
 #'
 calcPar <- function(Results){
 
-  VarCov <- base::solve(-Results$hessian)
+  VarCov <- stats::vcov(Results) #base::solve(-Results$hessian)
   coefEst <- stats::coef(Results)
 
   SigmaNum <- grep('Sigma', names(coefEst))
@@ -32,8 +32,10 @@ calcPar <- function(Results){
              msm::deltamethod (~ (exp(2*x1) - 1)/(exp(2*x1) + 1), outM[4, 1], outM[4, 2]^2))
 
   parMatrix <- matrix(c(parEst, parSD, parEst/parSD), nrow = length(parEst))
-  row.names(parMatrix) <- c('Main.0.Sigma', 'Main.1.Sigma', 'Main.0.Rho', 'Main.1.Rho')
+  row.names(parMatrix) <- c('Outcome.0.Sigma', 'Outcome.1.Sigma', 'Outcome.0.Rho', 'Outcome.1.Rho')
   colnames(parMatrix) <- c('Estimate', 'Std. error', 'z')
   parMatrix
-
 }
+
+
+
