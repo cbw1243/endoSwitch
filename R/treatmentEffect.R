@@ -44,16 +44,11 @@ treatmentEffect <- function(Results, RegData, OutcomeDep, SelectDep, OutcomeCov,
   MillsRatioUnTreated <- -stats::dnorm(SelectCovDataUnTreated %*% SelectPar)/(1-stats::pnorm(SelectCovDataUnTreated %*% SelectPar))
 
   # Treatment effect
-  TE <- c(CovData[TreatedObs, ] %*% matrix(ParApt1), CovData[-TreatedObs, ] %*% matrix(ParApt0))
-  # Average treatment effect
-  ATE <- mean(TE)
-  ATE_SD <- stats::sd(TE)
+  EY1.A1 <- CovData[TreatedObs, ] %*% matrix(ParApt1) + DistParEst['Outcome.1.Sigma', 1]*MillsRatioTreated
+  EY0.A0 <- CovData[-TreatedObs, ] %*% matrix(ParApt0) + DistParEst['Outcome.0.Sigma', 1]*MillsRatioUnTreated
 
-  EY1.A1 <- TE[TreatedObs] + DistParEst[2, 1]*MillsRatioTreated
-  EY0.A0 <- TE[-TreatedObs] + DistParEst[1, 1]*MillsRatioUnTreated
-
-  EY0.A1 <- TE[TreatedObs] + DistParEst[1, 1]*MillsRatioTreated
-  EY1.A0 <- TE[-TreatedObs] + DistParEst[2, 1]*MillsRatioUnTreated
+  EY0.A1 <- CovData[TreatedObs, ] %*% matrix(ParApt0) + DistParEst['Outcome.0.Sigma', 1]*MillsRatioTreated
+  EY1.A0 <- CovData[-TreatedObs, ] %*% matrix(ParApt1) + DistParEst['Outcome.1.Sigma', 1]*MillsRatioUnTreated
 
   ATT <- mean(EY1.A1) - mean(EY0.A1)
   ATU <- mean(EY1.A0) - mean(EY0.A0)
@@ -67,3 +62,4 @@ treatmentEffect <- function(Results, RegData, OutcomeDep, SelectDep, OutcomeCov,
 
   effectM
 }
+
