@@ -7,15 +7,15 @@
 endoSwitch2Stage(RegData, OutcomeDep, SelectDep, OutcomeCov, SelectCov)
 }
 \arguments{
-\item{RegData}{Data for doing the regression analysis}
+\item{RegData}{an data frame. Data for running the regression analysis.}
 
-\item{OutcomeDep}{Dependent variable in the main model}
+\item{OutcomeDep}{character. Dependent variable in the outcome equation.}
 
-\item{SelectDep}{Dependent variable in the selection model. This should be binary (0 or 1).}
+\item{SelectDep}{character. Dependent variable in the Selection model. The iable must be binary (0 or 1).}
 
-\item{OutcomeCov}{Independent variables in the main model.}
+\item{OutcomeCov}{character vector. Independent iables in the outcome equation.}
 
-\item{SelectCov}{Independent variable in the selection model}
+\item{SelectCov}{character vector. Independent variables in the selection equation.}
 }
 \value{
 A list containing regression results.

@@ -9,15 +9,15 @@ treatmentEffect(Results, RegData, OutcomeDep, SelectDep, OutcomeCov, SelectCov)
 \arguments{
 \item{Results}{Estimated endogenous switching regression model}
 
-\item{RegData}{Data for doing the regression analysis}
+\item{RegData}{an data frame. Data for running the regression analysis.}
 
-\item{OutcomeDep}{Dependent iable in the Outcome model}
+\item{OutcomeDep}{character. Dependent variable in the outcome equation.}
 
-\item{SelectDep}{Dependent iable in the Selection model. This should be binary (0 or 1).}
+\item{SelectDep}{character. Dependent variable in the Selection model. The iable must be binary (0 or 1).}
 
-\item{OutcomeCov}{Independent iables in the Outcome model.}
+\item{OutcomeCov}{character vector. Independent iables in the outcome equation.}
 
-\item{SelectCov}{Independent iable in the Selection model}
+\item{SelectCov}{character vector. Independent variables in the selection equation.}
 }
 \value{
 A matrix that reports the calculated average treatment effects.

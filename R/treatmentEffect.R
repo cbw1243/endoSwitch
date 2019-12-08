@@ -5,11 +5,12 @@
 #' the untreated.
 #'
 #' @param Results Estimated endogenous switching regression model
-#' @param RegData Data for doing the regression analysis
-#' @param OutcomeDep Dependent iable in the Outcome model
-#' @param SelectDep Dependent iable in the Selection model. This should be binary (0 or 1).
-#' @param OutcomeCov Independent iables in the Outcome model.
-#' @param SelectCov Independent iable in the Selection model
+#' @param RegData an data frame. Data for running the regression analysis.
+#' @param OutcomeDep character. Dependent variable in the outcome equation.
+#' @param SelectDep character. Dependent variable in the Selection model. The iable must be binary (0 or 1).
+#' @param OutcomeCov character vector. Independent iables in the outcome equation.
+#' @param SelectCov character vector. Independent variables in the selection equation.
+
 #'
 #'@references Abdulai (2016) Impact of conservation agriculture technology on
 #'household welfare in Zambia. \emph{Agricultural Economics} 47:729-741

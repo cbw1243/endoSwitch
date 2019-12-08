@@ -6,11 +6,11 @@
 #'
 #' The first stage uses a probit model to estimate the selection equation. The second stage uses OLS, plus the inverse mills ratios to estimate the main equations.
 #'
-#' @param RegData Data for doing the regression analysis
-#' @param OutcomeDep Dependent variable in the main model
-#' @param SelectDep Dependent variable in the selection model. This should be binary (0 or 1).
-#' @param OutcomeCov Independent variables in the main model.
-#' @param SelectCov Independent variable in the selection model
+#' @param RegData an data frame. Data for running the regression analysis.
+#' @param OutcomeDep character. Dependent variable in the outcome equation.
+#' @param SelectDep character. Dependent variable in the Selection model. The iable must be binary (0 or 1).
+#' @param OutcomeCov character vector. Independent iables in the outcome equation.
+#' @param SelectCov character vector. Independent variables in the selection equation.
 #'
 #' @references Heckman, Tobias, and Vytlacil (2001). Four parameters of interest in the evaluation of
 #' social programs. \emph{Southern Economic Journal}.

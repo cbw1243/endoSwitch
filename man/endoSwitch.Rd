@@ -21,13 +21,13 @@ endoSwitch(
 \arguments{
 \item{RegData}{an data frame. Data for running the regression analysis.}
 
-\item{OutcomeDep}{character. Dependent iable in the main model.}
+\item{OutcomeDep}{character. Dependent variable in the outcome equation.}
 
-\item{SelectDep}{character. Dependent iable in the Selection model. The iable must be binary (0 or 1).}
+\item{SelectDep}{character. Dependent variable in the Selection model. The iable must be binary (0 or 1).}
 
-\item{OutcomeCov}{character vector. Independent iables in the main model.}
+\item{OutcomeCov}{character vector. Independent iables in the outcome equation.}
 
-\item{SelectCov}{character vector. Independent iable in the Selection model.}
+\item{SelectCov}{character vector. Independent variables in the selection equation.}
 
 \item{treatEffect}{TRUE/FALSE. Choose to show the average treatment effects or not.}
 
@@ -41,7 +41,7 @@ If NULL, the coefficient estimates from the two-stage estimation will be used.}
 
 \item{verbose}{TRUE/FALSE. Choose to show the status of optimization or not.}
 
-\item{...}{Other parameters to be passed to the Selected maximization routine. See \code{\link{maxLik}}.}
+\item{...}{Other parameters to be passed to the selected maximization routine. See \code{\link{maxLik}}.}
 }
 \value{
 A list containing three elements. The first element is an object of class "maxLik". The estimates include parameters in the Selection equation,
@@ -52,27 +52,27 @@ origial forms using the Delta method. The second element contains the estimates 
 distributional parameters.  The third element contains the treatment effects.
 }
 \description{
-This is the main interface for the endoSwitch package, and the function performs full maximum likelihood
-estimation of an endogenous switching regression.
+This is the main interface for the endoSwitch package to estimate the endogenous switching regression
+models.
 }
 \details{
 This function estimates the endogenous switching regression model using full maximum likelihood estimation
-method. In this model, a Selection equation sorts observation units over two different regimes (e.g., treated and
-not-treated, adopter or non-adopter), and two main equations (also called outcome equations) determine the
-outcome. The estimation of the model relies on joint normality of the error terms in the equation system (the Selection
-equation + 2 main equations). The model is estimated by maximizing the joint likelihood function, which is provided in
+method. In this model, a selection equation sorts observation units over two different regimes (e.g., treated and
+not-treated, or adopter or non-adopter), and two outcome equations that determine the
+outcome. Estimation of the model relies on joint normality of the error terms in the equation system (the selection
+equation plus two outcome equations). The model is estimated by maximizing the joint likelihood function that is provided in
 Lokshin and Sajaia (2004).
 
 The \code{endoSwitch} uses the \code{maxLik} function in the maxLik package to do the optimization.
 
-Note that users can provide starting values for the optimization. Assume that you have M iables (including the constant) in the Selection equation,
-and N iables (including the constant) in the main equation.
-Then you need (M + 2*N + 4) starting values. The first M values are for the iables in the
-Selection equation (last for the constant), then followed by N values for the main model with SelectDep = 0,
-and another N values for the main model with SelectDep = 1.
-The last four values are: sigma in main equation with SelectDep = 0, sigma in main equation with SelectDep = 1,
-rho in main equation with SelectDep = 0, rho in main equation with SelectDep = 1. If starting values are not provided,
-the function will automatically search for reasonal values (usually works).
+Note that users can provide starting values for the optimization. Assume that you have M iables (including the constant) in
+the selection equation, and N iables (including the constant) in the outcome equation.
+Then you need (M + 2*N + 4) starting values. The first M values are for the variables in the
+selection equation (last for the constant), then followed by N values for the outcome equation with SelectDep = 0,
+and another N values for the outcome equation with SelectDep = 1.
+The last four values are: sigma in outcome equation with SelectDep = 0, sigma in outcome equation with SelectDep = 1,
+rho in outcome equation with SelectDep = 0, rho in outcome equation with SelectDep = 1. If starting values are not provided,
+the function will automatically provide start values based on two-stage estimation results.
 }
 \examples{
 data(ImpactData)
