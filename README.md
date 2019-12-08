@@ -9,6 +9,8 @@ To install the package, run the following codes in R:
 install.packages("devtools") # Run this if the devtools package is not installed.     
 devtools::install_github("cbw1243/endoSwitch")  
 
+Regular changes are being made to improve on the package. Please use the most recent version of the package. Install again before using it. 
+
 Any feedback is welcome. 
 
 Contact: Bowen Chen, PhD (bwchen@illinois.edu) 
