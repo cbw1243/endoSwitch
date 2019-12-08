@@ -118,10 +118,10 @@ endoSwitch <- function(RegData, OutcomeDep, SelectDep, OutcomeCov, SelectCov,
 
   if(is.null(start)){
     twostage.results <- endoSwitch2Stage(RegData, OutcomeDep, SelectDep, OutcomeCov, SelectCov)
-    rho0EstX <- ifelse(twostage.results$distParEst['rho0'] > 1, 1,
-                                                  ifelse(twostage.results$distParEst['rho0'] < -1, -1, twostage.results$distParEst['rho0']))
-    rho1EstX <- ifelse(twostage.results$distParEst['rho1'] > 1, 1,
-                                                  ifelse(twostage.results$distParEst['rho1'] < -1, -1, twostage.results$distParEst['rho1']))
+    rho0EstX <- ifelse(twostage.results$distParEst['rho0'] > 1, 0.9,
+                                                  ifelse(twostage.results$distParEst['rho0'] < -1, -0.9, twostage.results$distParEst['rho0']))
+    rho1EstX <- ifelse(twostage.results$distParEst['rho1'] > 1, 0.9,
+                                                  ifelse(twostage.results$distParEst['rho1'] < -1, -0.9, twostage.results$distParEst['rho1']))
 
     start <- c(stats::coef(twostage.results$FirstStageReg)[-1], stats::coef(twostage.results$FirstStageReg)[1],
                stats::coef(twostage.results$SecondStageReg.0)[2:(length(OutcomeCov)+1)],
