@@ -11,7 +11,7 @@
 #'
 calcPar <- function(Results){
 
-  VarCov <- stats::vcov(Results) #base::solve(-Results$hessian)
+  VarCov <- base::solve(-Results$hessian)
   coefEst <- stats::coef(Results)
 
   SigmaNum <- grep('Sigma', names(coefEst))
