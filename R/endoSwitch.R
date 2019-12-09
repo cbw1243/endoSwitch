@@ -22,13 +22,12 @@
 #' the function will automatically provide start values based on two-stage estimation results.
 #'
 #'
-#' @param RegData an data frame. Data for running the regression analysis.
+#' @param data an data frame. Data for running the regression analysis.
 #' @param OutcomeDep character. Dependent variable in the outcome equation.
 #' @param SelectDep character. Dependent variable in the Selection model. The iable must be binary (0 or 1).
-#' @param OutcomeCov character vector. Independent iables in the outcome equation.
-#' @param SelectCov character vector. Independent variables in the selection equation.
+#' @param OutcomeCov character vector. Covariates in the outcome equation.
+#' @param SelectCov character vector. Covariates in the selection equation.
 #' @param treatEffect TRUE/FALSE. Choose to show the average treatment effects or not.
-#' @param trans TRUE/FALSE. Choose to show the estimates of original distributional parameters or not.
 #' @param method character. Maximization method to be used. The default is "BFGS" (for Broyden-Fletcher-Goldfarb-Shanno).
 #' Other methods can also be used. See \code{\link{maxLik}}.
 #' @param start optional numeric vector. Used as initial values of parameters for maximization purpose.
@@ -63,34 +62,37 @@
 #'
 #' endoReg$treatEffect # Obtain the treatment effect
 
-endoSwitch <- function(RegData, OutcomeDep, SelectDep, OutcomeCov, SelectCov,
-                       treatEffect = TRUE, trans = TRUE, method = 'BFGS', start = NULL,
+endoSwitch <- function(data, OutcomeDep, SelectDep, OutcomeCov, SelectCov, treatEffect = TRUE, method = 'BFGS', start = NULL,
                        verbose = FALSE, ...){
-  if(sum(OutcomeDep %in% colnames(RegData)) != length(OutcomeDep))
+  if(sum(OutcomeDep %in% colnames(data)) != length(OutcomeDep))
     stop("OutcomeDep must be valid column names in the dataset.")
 
-  if(sum(OutcomeCov %in% colnames(RegData)) != length(OutcomeCov))
+  if(sum(OutcomeCov %in% colnames(data)) != length(OutcomeCov))
     stop("OutcomeCov must be valid column names in the dataset.")
 
-  if(sum(SelectDep %in% colnames(RegData)) != length(SelectDep))
+  if(sum(SelectDep %in% colnames(data)) != length(SelectDep))
     stop("SelectDep must be valid column names in the dataset.")
 
-  if(sum(SelectCov %in% colnames(RegData)) != length(SelectCov))
+  if(sum(SelectCov %in% colnames(data)) != length(SelectCov))
     stop("SelectCov must be valid column names in the dataset.")
 
-  if(nrow(RegData) < length(OutcomeCov) + length(SelectCov))
+  if(nrow(data) < length(OutcomeCov) + length(SelectCov))
     stop('Too few observations.')
 
   if(identical(OutcomeCov, SelectCov))
     stop('OutcomeCov can not be identical to SelectCov.')
 
-  RegData <- data.table::as.data.table(RegData)
+  data <- data.table::as.data.table(data)
+  data <- data[, base::unique(c(OutcomeDep, SelectDep, OutcomeCov, SelectCov)), with = FALSE]
+  nrowData <- nrow(data)
 
-  if(sum(apply(RegData[, c(OutcomeCov, OutcomeDep, SelectCov, SelectDep), with = FALSE],
-               2, is.numeric)) < length(c(OutcomeCov, OutcomeDep, SelectCov, SelectDep)))
+  data <- stats::na.omit(data)
+  if(nrow(data) < nrowData) cat('Observations with NA values have been discarded.')
+
+  if(sum(apply(data, 2, is.numeric)) < length(base::unique(c(OutcomeDep, SelectDep, OutcomeCov, SelectCov))))
     stop('All Selected columns must be numeric.')
 
-  SelectValue <- unlist(RegData[, SelectDep, with = FALSE])
+  SelectValue <- unlist(data[, SelectDep, with = FALSE])
 
   if(length(SelectValue[-c(which(SelectValue == 0), which(SelectValue == 1))]) >= 1)
     stop('The dependent iable (SelectDep) must be 0 or 1.')
@@ -104,7 +106,7 @@ endoSwitch <- function(RegData, OutcomeDep, SelectDep, OutcomeCov, SelectCov,
                 'Outcome.0.SigmaX', 'Outcome.1.SigmaX',
                 'Outcome.0.RhoX', 'Outcome.1.RhoX')
 
-  assign('RegData', RegData, envir)
+  assign('data', data, envir)
   assign('OutcomeDep', OutcomeDep, envir)
   assign('SelectDep', SelectDep, envir)
   assign('OutcomeCov', OutcomeCov, envir)
@@ -117,7 +119,7 @@ endoSwitch <- function(RegData, OutcomeDep, SelectDep, OutcomeCov, SelectCov,
   assign('verbose', verbose, envir)
 
   if(is.null(start)){
-    twostage.results <- endoSwitch2Stage(RegData, OutcomeDep, SelectDep, OutcomeCov, SelectCov)
+    twostage.results <- endoSwitch2Stage(data, OutcomeDep, SelectDep, OutcomeCov, SelectCov)
     rho0EstX <- ifelse(twostage.results$distParEst['rho0'] > 1, 0.9,
                                                   ifelse(twostage.results$distParEst['rho0'] < -1, -0.9, twostage.results$distParEst['rho0']))
     rho1EstX <- ifelse(twostage.results$distParEst['rho1'] > 1, 0.9,
@@ -142,18 +144,9 @@ endoSwitch <- function(RegData, OutcomeDep, SelectDep, OutcomeCov, SelectCov,
   rownames(mle.results$hessian) <- colnames(mle.results$hessian) <- ParNames
   #if(isTRUE(verbose)) cat('Searching completed.', '\r')
 
-  if(isTRUE(treatEffect)){
-    treatEffectResult <- treatmentEffect(mle.results, RegData, OutcomeDep, SelectDep, OutcomeCov, SelectCov)
-  }else{
-    treatEffectResult <- 'Treatment effects are not calculated. Use treatEffect = TRUE to get them.'
-  }
+  treatEffectResult <- treatmentEffect(mle.results, data, OutcomeDep, SelectDep, OutcomeCov, SelectCov, treatEffect)
 
-  if(isTRUE(trans)){
-    distPar = calcPar(mle.results)
-  }else{
-    cat('Caution: Distributional parameters have been transformed. Use trans = TRUE to recover original estimates.')
-    distPar <- NULL
-  }
+  distPar = calcPar(mle.results)
 
   out <- list(MLE.Results = mle.results, distPar = distPar, treatEffect = treatEffectResult)
   out

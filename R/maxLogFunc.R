@@ -4,27 +4,27 @@ maxLogFunc <- function(param){
   rho1 <- (exp(2*param[TotParNum]) - 1)/(exp(2*param[TotParNum]) + 1)
 
   SelectParM <- matrix(param[1:SelectParNum], SelectParNum, 1)
-  SelectData <- cbind(as.matrix(RegData[, SelectCov, with = F]), matrix(1, nrow(RegData), 1))
+  SelectData <- cbind(as.matrix(data[, SelectCov, with = F]), matrix(1, nrow(data), 1))
   SelectCovSum <- SelectData %*% SelectParM
 
-  SelectLabel <- which(RegData[, SelectDep, with = F] == 1)
+  SelectLabel <- which(data[, SelectDep, with = F] == 1)
   # Not treated
   OutcomeParM0 <- matrix(param[(SelectParNum + 1): (SelectParNum + OutcomeParNum)], OutcomeParNum, 1)
-  OutcomeData0 <- cbind(as.matrix(RegData[-SelectLabel, OutcomeCov, with = F]),
-                    matrix(1, nrow(RegData)-length(SelectLabel), 1))
+  OutcomeData0 <- cbind(as.matrix(data[-SelectLabel, OutcomeCov, with = F]),
+                    matrix(1, nrow(data)-length(SelectLabel), 1))
   Outcome0Sum <- as.vector(OutcomeData0 %*% OutcomeParM0)
 
   # Treated
   OutcomeParM1 <- matrix(param[(SelectParNum + OutcomeParNum + 1): (SelectParNum + 2*OutcomeParNum)], OutcomeParNum, 1)
-  OutcomeData1 <- cbind(as.matrix(RegData[SelectLabel, OutcomeCov, with = F]),
+  OutcomeData1 <- cbind(as.matrix(data[SelectLabel, OutcomeCov, with = F]),
                     matrix(1, length(SelectLabel), 1))
   Outcome1Sum <- as.vector(OutcomeData1 %*% OutcomeParM1)
 
   SelectCovSum0 <- unlist(SelectCovSum[-SelectLabel, 1]) # Not Treated
   SelectCovSum1 <- unlist(SelectCovSum[SelectLabel, 1]) # Treated
 
-  OutcomeRes0 <- unlist(RegData[-SelectLabel, OutcomeDep, with = F]) - Outcome0Sum
-  OutcomeRes1 <- unlist(RegData[SelectLabel, OutcomeDep, with = F]) - Outcome1Sum
+  OutcomeRes0 <- unlist(data[-SelectLabel, OutcomeDep, with = F]) - Outcome0Sum
+  OutcomeRes1 <- unlist(data[SelectLabel, OutcomeDep, with = F]) - Outcome1Sum
 
   eta1 <- (SelectCovSum1 + rho1*OutcomeRes1/sigma1)/sqrt(1-rho1^2)
   eta0 <- (SelectCovSum0 + rho0*OutcomeRes0/sigma0)/sqrt(1-rho0^2)

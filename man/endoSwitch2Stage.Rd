@@ -4,18 +4,18 @@
 \alias{endoSwitch2Stage}
 \title{Endogenous switching regression}
 \usage{
-endoSwitch2Stage(RegData, OutcomeDep, SelectDep, OutcomeCov, SelectCov)
+endoSwitch2Stage(data, OutcomeDep, SelectDep, OutcomeCov, SelectCov)
 }
 \arguments{
-\item{RegData}{an data frame. Data for running the regression analysis.}
+\item{data}{an data frame. Data for running the regression analysis.}
 
 \item{OutcomeDep}{character. Dependent variable in the outcome equation.}
 
 \item{SelectDep}{character. Dependent variable in the Selection model. The iable must be binary (0 or 1).}
 
-\item{OutcomeCov}{character vector. Independent iables in the outcome equation.}
+\item{OutcomeCov}{character vector. Covariates in the outcome equation.}
 
-\item{SelectCov}{character vector. Independent variables in the selection equation.}
+\item{SelectCov}{character vector. Covariates in the selection equation.}
 }
 \value{
 A list containing regression results.
