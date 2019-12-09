@@ -50,8 +50,11 @@ endoSwitch2Stage <- function(RegData, OutcomeDep, SelectDep, OutcomeCov, SelectC
   )
 
   # Second stage estimation
-  MillsRatioAdt1 <- stats::dnorm(stats::predict(RegS1, RegData[AdtObs, ]))/stats::pnorm(stats::predict(RegS1, RegData[AdtObs, ]))
-  MillsRatioAdt0 <- -stats::dnorm(stats::predict(RegS1, RegData[-AdtObs, ]))/(1-stats::pnorm(stats::predict(RegS1, RegData[-AdtObs, ])))
+  Pred1 <- suppressWarnings(stats::predict(RegS1, RegData[AdtObs, ]))
+  Pred0 <- suppressWarnings(stats::predict(RegS1, RegData[-AdtObs, ]))
+
+  MillsRatioAdt1 <- stats::dnorm(Pred1)/stats::pnorm(Pred1)
+  MillsRatioAdt0 <- stats::dnorm(Pred0)/(1-stats::pnorm(Pred0))
 
   RegS2Formula_Adt1 <- stats::as.formula(paste0(OutcomeDep, '~', paste(OutcomeCov, collapse = '+'), '+', 'MillsRatioAdt1'))
   RegS2_Adt1 <- stats::lm(RegS2Formula_Adt1, data = RegData[AdtObs, ])
@@ -60,15 +63,15 @@ endoSwitch2Stage <- function(RegData, OutcomeDep, SelectDep, OutcomeCov, SelectC
   RegS2_Adt0 <- stats::lm(RegS2Formula_Adt0, data = RegData[-AdtObs, ])
 
   sigma1Est <- (sum(RegS2_Adt1$residuals^2) +
-                    sum(MillsRatioAdt1*(MillsRatioAdt1 + stats::predict(RegS1, RegData[AdtObs, ])))*stats::coef(RegS2_Adt1)['MillsRatioAdt1'])/length(MillsRatioAdt1)
+                    sum(MillsRatioAdt1*(MillsRatioAdt1 + Pred1))*stats::coef(RegS2_Adt1)['MillsRatioAdt1'])/length(MillsRatioAdt1)
   sigma1Est <- sigma1Est^.5
 
   sigma0Est <- (sum(RegS2_Adt0$residuals^2) +
-                    sum(MillsRatioAdt0*(MillsRatioAdt0 + stats::predict(RegS1, RegData[-AdtObs, ])))*stats::coef(RegS2_Adt0)['MillsRatioAdt0'])/length(MillsRatioAdt0)
+                    sum(MillsRatioAdt0*(MillsRatioAdt0 + Pred0))*stats::coef(RegS2_Adt0)['MillsRatioAdt0'])/length(MillsRatioAdt0)
   sigma0Est <- sigma0Est^.5
 
   rho1Est <- stats::coef(RegS2_Adt1)['MillsRatioAdt1']/sigma1Est
-  rho0Est <- stats::coef(RegS2_Adt0)['MillsRatioAdt0']/sigma0Est
+  rho0Est <- -stats::coef(RegS2_Adt0)['MillsRatioAdt0']/sigma0Est
 
   endoSwitch2SResults <- list(FirstStageReg = RegS1, SecondStageReg.0 = RegS2_Adt0, SecondStageReg.1 = RegS2_Adt1,
                   distParEst = c(sigma0 = as.numeric(sigma0Est), sigma1 = as.numeric(sigma1Est),
