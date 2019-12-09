@@ -4,13 +4,15 @@ The R package estimates the endogenous switching regression model using full max
 
 The function can replicate the regression results of the *movestay* command in STATA, though minor difference could occur due to differences in the optimization methods.
 
+# Package installation   
 To install the package, run the following codes in R:
 
 install.packages("devtools") # Run this if the devtools package is not installed.     
 devtools::install_github("cbw1243/endoSwitch")  
 
-Regular changes are being made to improve on the package. Please use the most recent version of the package. Install again before using it. 
+# Note   
+The package is still under development. I am making regular changes to the package for performance improvement. Please use the most recent version of the package. **Install again before using it**. 
 
-Any feedback is welcome. 
+If there is anything wrong, shoot me an email. 
 
 Contact: Bowen Chen, PhD (bwchen@illinois.edu) 
