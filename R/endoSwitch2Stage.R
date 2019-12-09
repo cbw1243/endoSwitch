@@ -40,7 +40,7 @@ endoSwitch2Stage <- function(RegData, OutcomeDep, SelectDep, OutcomeCov, SelectC
   # First stage estimation
   RegS1Formula <- stats::as.formula(paste0(SelectDep, '~', paste(SelectCov, collapse = '+')))
 
-  RegS1 <- RegS1 <- tryCatch(
+  RegS1 <- tryCatch(
     { # Ignore warnings, mostly harmless
       suppressWarnings(stats::glm(RegS1Formula, data = RegData, family = stats::binomial(link = 'probit')))
     }, error = function(cond){
@@ -62,12 +62,18 @@ endoSwitch2Stage <- function(RegData, OutcomeDep, SelectDep, OutcomeCov, SelectC
   RegS2Formula_Adt0 <- stats::as.formula(paste0(OutcomeDep, '~', paste(OutcomeCov, collapse = '+'), '+', 'MillsRatioAdt0'))
   RegS2_Adt0 <- stats::lm(RegS2Formula_Adt0, data = RegData[-AdtObs, ])
 
-  sigma1Est <- (sum(RegS2_Adt1$residuals^2) +
-                    sum(MillsRatioAdt1*(MillsRatioAdt1 + Pred1))*stats::coef(RegS2_Adt1)['MillsRatioAdt1'])/length(MillsRatioAdt1)
+  sigma1Est <- (sum(RegS2_Adt1$residuals^2 + stats::coef(RegS2_Adt1)['MillsRatioAdt1']^2*MillsRatioAdt1*Pred1))/length(MillsRatioAdt1)
+  if(sigma1Est <= 0) {
+    warning('2 stage estimation failed, negative sigma1 found')
+    sigma0Est <- 1
+  }
   sigma1Est <- sigma1Est^.5
 
-  sigma0Est <- (sum(RegS2_Adt0$residuals^2) +
-                    sum(MillsRatioAdt0*(MillsRatioAdt0 + Pred0))*stats::coef(RegS2_Adt0)['MillsRatioAdt0'])/length(MillsRatioAdt0)
+  sigma0Est <- (sum(RegS2_Adt0$residuals^2 + stats::coef(RegS2_Adt0)['MillsRatioAdt0']^2*MillsRatioAdt0*Pred0))/length(MillsRatioAdt0)
+  if(sigma0Est <= 0) {
+    warning('2 stage estimation failed, negative sigma0 found')
+    sigma0Est <- 1
+  }
   sigma0Est <- sigma0Est^.5
 
   rho1Est <- stats::coef(RegS2_Adt1)['MillsRatioAdt1']/sigma1Est
@@ -78,6 +84,5 @@ endoSwitch2Stage <- function(RegData, OutcomeDep, SelectDep, OutcomeCov, SelectC
                                  rho0 = as.numeric(rho0Est), rho1 = as.numeric(rho1Est)))
   return(endoSwitch2SResults)
 }
-
 
 
