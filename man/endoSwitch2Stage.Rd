@@ -21,12 +21,12 @@ endoSwitch2Stage(data, OutcomeDep, SelectDep, OutcomeCov, SelectCov)
 A list containing regression results.
 }
 \description{
-This function estimates the endogenous switching regression model through two-stage regression.
-The estimation procedures are described in Heckman et al. (2001). The \code{endoSwitch} function is
-preferred than this function for estimation.
+This function estimates the endogenous switching regression model via two-stage estimations (Maddala, 1986)
 }
 \details{
-The first stage uses a probit model to estimate the selection equation. The second stage uses OLS, plus the inverse mills ratios to estimate the main equations.
+The first stage uses a probit model to estimate the selection equation.
+The second stage uses ordinary least squares including the inverse mills ratios computed from the first stage
+estimation results to estimate the outcome equations.
 }
 \examples{
 data(ImpactData)
@@ -43,6 +43,5 @@ summary(Results$SecondStageReg.0)
 summary(Results$SecondStageReg.1)
 }
 \references{
-Heckman, Tobias, and Vytlacil (2001). Four parameters of interest in the evaluation of
-social programs. \emph{Southern Economic Journal}.
+Maddala (1986). Limited-Dependent and Qualitative Variables in Econometrics. Cambridge University Press.
 }

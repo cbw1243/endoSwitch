@@ -1,10 +1,10 @@
 #' Endogenous switching regression
 #'
-#' This function estimates the endogenous switching regression model through two-stage regression.
-#' The estimation procedures are described in Heckman et al. (2001). The \code{endoSwitch} function is
-#' preferred than this function for estimation.
+#' This function estimates the endogenous switching regression model via two-stage estimations (Maddala, 1986)
 #'
-#' The first stage uses a probit model to estimate the selection equation. The second stage uses OLS, plus the inverse mills ratios to estimate the main equations.
+#' The first stage uses a probit model to estimate the selection equation.
+#' The second stage uses ordinary least squares including the inverse mills ratios computed from the first stage
+#' estimation results to estimate the outcome equations.
 #'
 #' @param data an data frame. Data for running the regression analysis.
 #' @param OutcomeDep character. Dependent variable in the outcome equation.
@@ -12,9 +12,7 @@
 #' @param OutcomeCov character vector. Covariates in the outcome equation.
 #' @param SelectCov character vector. Covariates in the selection equation.
 #'
-#' @references Heckman, Tobias, and Vytlacil (2001). Four parameters of interest in the evaluation of
-#' social programs. \emph{Southern Economic Journal}.
-
+#' @references Maddala (1986). Limited-Dependent and Qualitative Variables in Econometrics. Cambridge University Press.
 #' @return A list containing regression results.
 #'
 #' @export

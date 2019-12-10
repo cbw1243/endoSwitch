@@ -41,12 +41,11 @@ If NULL, the coefficient estimates from the two-stage estimation will be used.}
 \item{...}{Other parameters to be passed to the selected maximization routine. See \code{\link{maxLik}}.}
 }
 \value{
-A list containing three elements. The first element is an object of class "maxLik". The estimates include parameters in the Selection equation,
-parameters in the main equations, and the associated transformed distributional parameters. Note
-that the distributional parameters have been transformed to facilitate the estimations, as recommended by Lokshin and Sajaia (2004).
-As a default option, \code{endoSwitch} reports estimates of the distributional parameters by transforming them back to
-origial forms using the Delta method. The second element contains the estimates of
-distributional parameters.  The third element contains the treatment effects.
+A list containing three elements. The first element is an object of class "maxLik". The estimates include parameters
+in the selection equation, parameters in the outcome equations, and the transformed distributional parameters (parameters are
+transformed to faciliate maximization, as recommended by Lokshin and Sajaia (2004)). The second element reports the estimates of
+original distributional parameters (transformed back via the delta method). The third element contains a table reporting
+average treatment effects or a list of expected outcome values, depending on users' choice of \code{treatEffect}.
 }
 \description{
 This is the main interface for the endoSwitch package to estimate the endogenous switching regression
@@ -60,16 +59,18 @@ outcome. Estimation of the model relies on joint normality of the error terms in
 equation plus two outcome equations). The model is estimated by maximizing the joint likelihood function that is provided in
 Lokshin and Sajaia (2004).
 
-The \code{endoSwitch} uses the \code{maxLik} function in the maxLik package to do the optimization.
-
-Note that users can provide starting values for the optimization. Assume that you have M iables (including the constant) in
+The \code{endoSwitch} uses the \code{maxLik} function in the maxLik package to do the optimization. The function automatically
+searches for starting values for maximization using the results of two-stage estimation.
+However, though not recommended, users can provide starting values manually. Assume that you have M iables (including the constant) in
 the selection equation, and N iables (including the constant) in the outcome equation.
 Then you need (M + 2*N + 4) starting values. The first M values are for the variables in the
 selection equation (last for the constant), then followed by N values for the outcome equation with SelectDep = 0,
 and another N values for the outcome equation with SelectDep = 1.
 The last four values are: sigma in outcome equation with SelectDep = 0, sigma in outcome equation with SelectDep = 1,
-rho in outcome equation with SelectDep = 0, rho in outcome equation with SelectDep = 1. If starting values are not provided,
-the function will automatically provide start values based on two-stage estimation results.
+rho in outcome equation with SelectDep = 0, rho in outcome equation with SelectDep = 1.
+
+The \code{endoSwitch} function will return average treatment effects (for the treated or untreated) as well as heterogeneity effects.
+Please refer to table 2 in Di Falco, Veronesi, and Yesuf (2011, p.837) for definitions of these effects.
 }
 \examples{
 data(ImpactData)
@@ -80,13 +81,22 @@ SelectCov <- c('Age', 'Perception')
 endoReg <- endoSwitch(ImpactData, OutcomeDep, SelectDep, OutcomeCov, SelectCov)
 summary(endoReg$MLE.Results) # Sigma and Rho are transformed values.
 
-endoReg$distPar # Obtain the original distributional parameters
+endoReg$distPar # Display the original distributional parameters
 
-endoReg$treatEffect # Obtain the treatment effect
+endoReg$treatEffect # Display the average treatment effects
 }
 \references{
 Lokshin and Sajaia (2004). Maximum-likelihood estimation of endogenous
 switching regression models. \emph{The Stata Journal}.
-HeckOutcome, Tobias, and Vytlacil (2001). Four parameters of interest in the evaluation of
-social programs. \emph{Southern Economic Journal}.
+
+Heckman (1979). Sample Selection Bias as a Specification Error. \emph{Econometrica}.
+
+Maddala (1986). Limited-Dependent and Qualitative Variables in Econometrics. Cambridge University Press.
+
+Di Falco, Veronesi, and Yesuf (2011). Does Adaptation to Climate Change Provide Food Security? A Micro-Perspective
+from Ethiopia. \emph{American Journal of Agricultural Economics}
+
+Abdulai (2016) Impact of conservation agriculture technology on
+household welfare in Zambia. \emph{Agricultural Economics} 47:729-741
+(\href{https://onlinelibrary.wiley.com/doi/abs/10.1111/agec.12269}{link here})
 }

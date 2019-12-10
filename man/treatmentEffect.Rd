@@ -30,15 +30,8 @@ treatmentEffect(
 \item{treatEffect}{TRUE/FALSE. Show average treatment effects or not.}
 }
 \value{
-A matrix that reports the calculated average treatment effects.
+A table that reports the average treatment effects or expected outcome values.
 }
 \description{
-This function calculates average treatment effects from an estimated endogenous switching regression model,
-including average treatment effects, average treatment effects on the treated, average treatment effects on
-the untreated.
-}
-\references{
-Abdulai (2016) Impact of conservation agriculture technology on
-household welfare in Zambia. \emph{Agricultural Economics} 47:729-741
-(\href{https://onlinelibrary.wiley.com/doi/abs/10.1111/agec.12269}{link here})
+This function calculates average treatment effects and heterogeneity effects from an estimated endogenous switching regression model.
 }
