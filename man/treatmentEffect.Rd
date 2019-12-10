@@ -15,22 +15,22 @@ treatmentEffect(
 )
 }
 \arguments{
-\item{Results}{Estimated endogenous switching regression model}
+\item{Results}{Estimated endogenous switching regression model.}
 
-\item{data}{an data frame. Data for running the regression analysis.}
+\item{data}{a data frame. Data for running the regression analysis.}
 
 \item{OutcomeDep}{character. Dependent variable in the outcome equation.}
 
-\item{SelectDep}{character. Dependent variable in the Selection model. The iable must be binary (0 or 1).}
+\item{SelectDep}{character. Dependent variable in the Selection model. The variable must be binary (0 or 1).}
 
 \item{OutcomeCov}{character vector. Covariates in the outcome equation.}
 
 \item{SelectCov}{character vector. Covariates in the selection equation.}
 
-\item{treatEffect}{TRUE/FALSE. Show average treatment effects or not.}
+\item{treatEffect}{TRUE/FALSE. Show average treatment effects or expected outcome values.}
 }
 \value{
-A table that reports the average treatment effects or expected outcome values.
+A table that reports the average treatment effects or a list of two tables reporting expected outcome values.
 }
 \description{
 This function calculates average treatment effects and heterogeneity effects from an estimated endogenous switching regression model.

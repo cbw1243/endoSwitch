@@ -18,17 +18,18 @@ endoSwitch(
 )
 }
 \arguments{
-\item{data}{an data frame. Data for running the regression analysis.}
+\item{data}{a data frame. Data for running the regression analysis.}
 
 \item{OutcomeDep}{character. Dependent variable in the outcome equation.}
 
-\item{SelectDep}{character. Dependent variable in the Selection model. The iable must be binary (0 or 1).}
+\item{SelectDep}{character. Dependent variable in the Selection model. The variable must be binary (0 or 1).}
 
 \item{OutcomeCov}{character vector. Covariates in the outcome equation.}
 
 \item{SelectCov}{character vector. Covariates in the selection equation.}
 
-\item{treatEffect}{TRUE/FALSE. Choose to show the average treatment effects or not.}
+\item{treatEffect}{\code{TRUE}/\code{FALSE}. If \code{TRUE}, average treatment effects will be calculated and returned.
+If \code{FALSE}, expected outcome values will be calculated and returned.}
 
 \item{method}{character. Maximization method to be used. The default is "BFGS" (for Broyden-Fletcher-Goldfarb-Shanno).
 Other methods can also be used. See \code{\link{maxLik}}.}
@@ -41,39 +42,42 @@ If NULL, the coefficient estimates from the two-stage estimation will be used.}
 \item{...}{Other parameters to be passed to the selected maximization routine. See \code{\link{maxLik}}.}
 }
 \value{
-A list containing three elements. The first element is an object of class "maxLik". The estimates include parameters
+A list containing three elements. The first element is an object of class "maxLik", which includes parameters
 in the selection equation, parameters in the outcome equations, and the transformed distributional parameters (parameters are
-transformed to faciliate maximization, as recommended by Lokshin and Sajaia (2004)). The second element reports the estimates of
+transformed to faciliate maximization, as recommended by Lokshin and Sajaia (2004)). The second element contains the estimates of
 original distributional parameters (transformed back via the delta method). The third element contains a table reporting
 average treatment effects or a list of expected outcome values, depending on users' choice of \code{treatEffect}.
 }
 \description{
 This is the main interface for the endoSwitch package to estimate the endogenous switching regression
-models.
+model (Heckman, 1979).
 }
 \details{
-This function estimates the endogenous switching regression model using full maximum likelihood estimation
+This function estimates the endogenous switching regression model using the full maximum likelihood estimation
 method. In this model, a selection equation sorts observation units over two different regimes (e.g., treated and
-not-treated, or adopter or non-adopter), and two outcome equations that determine the
-outcome. Estimation of the model relies on joint normality of the error terms in the equation system (the selection
+not-treated, or adopter and non-adopter), and two outcome equations that determine the
+outcome. Estimation of the model relies on joint normality of the error terms in the three-equation system (the selection
 equation plus two outcome equations). The model is estimated by maximizing the joint likelihood function that is provided in
 Lokshin and Sajaia (2004).
 
 The \code{endoSwitch} uses the \code{maxLik} function in the maxLik package to do the optimization. The function automatically
-searches for starting values for maximization using the results of two-stage estimation.
-However, though not recommended, users can provide starting values manually. Assume that you have M iables (including the constant) in
-the selection equation, and N iables (including the constant) in the outcome equation.
+searches for starting values for maximization using the results from two-stage estimation following Maddala (1986, chapter 8).
+Though not recommended, users may provide starting values manually. Assume that you have M variables (including the constant) in
+the selection equation, and N variables (including the constant) in each outcome equation.
 Then you need (M + 2*N + 4) starting values. The first M values are for the variables in the
-selection equation (last for the constant), then followed by N values for the outcome equation with SelectDep = 0,
-and another N values for the outcome equation with SelectDep = 1.
-The last four values are: sigma in outcome equation with SelectDep = 0, sigma in outcome equation with SelectDep = 1,
-rho in outcome equation with SelectDep = 0, rho in outcome equation with SelectDep = 1.
+selection equation (last vvalue for the constant), followed by N values for the outcome equation for the non-treated individuals
+(SelectDep = 0), and another N values for the outcome equation for the treated individuals (SelectDep = 1).
+The last four values are: sigma in outcome equation for the non-treated, sigma in outcome equation for the treated,
+rho in outcome equation for the non-treated, rho in outcome equation for the treated.
 
-The \code{endoSwitch} function will return average treatment effects (for the treated or untreated) as well as heterogeneity effects.
-Please refer to table 2 in Di Falco, Veronesi, and Yesuf (2011, p.837) for definitions of these effects.
+If \code{treatEffect} = \code{TRUE}, the \code{endoSwitch} function will report average treatment effects (for the treated or untreated) as well as heterogeneity effects.
+A detailed description of these effects is provided in Di Falco, Veronesi, and Yesuf (2011, p.837). If \code{treatEffect} = \code{FALSE},
+the \code{endoSwitch} function will report expected outcome values in a list of two dataframes:
+dataframe EYA1 reports actual (column EY1.A1) and counterfactual (column EY0.A1) expected outcome values for the treated;
+dataframe EYA0 reports actual (column EY0.A0) and counterfactual (column EY1.A0) expected outcome values for the untreated.
 }
 \examples{
-data(ImpactData)
+data(ImpactData) # Data are from Abdulai (2016)
 OutcomeDep <- 'Output'
 SelectDep <- 'CA'
 OutcomeCov <- c('Age')
@@ -86,17 +90,16 @@ endoReg$distPar # Display the original distributional parameters
 endoReg$treatEffect # Display the average treatment effects
 }
 \references{
-Lokshin and Sajaia (2004). Maximum-likelihood estimation of endogenous
-switching regression models. \emph{The Stata Journal}.
+Lokshin, Michael, and Roger B. Newson. “Impact of Interventions on Discrete Outcomes: Maximum Likelihood Estimation
+of the Binary Choice Models with Binary Endogenous Regressors.” Stata Journal 11, no. 3 (2011): 368–85.
 
-Heckman (1979). Sample Selection Bias as a Specification Error. \emph{Econometrica}.
+Heckman, James J. “Sample Selection Bias as a Specification Error.” Econometrica 47, no. 1 (1979): 153–61. https://doi.org/10.2307/1912352.
 
-Maddala (1986). Limited-Dependent and Qualitative Variables in Econometrics. Cambridge University Press.
+Maddala, G. S. “Limited-Dependent and Qualitative Variables in Econometrics.” Cambridge Books. Cambridge University Press, 1986.
 
-Di Falco, Veronesi, and Yesuf (2011). Does Adaptation to Climate Change Provide Food Security? A Micro-Perspective
-from Ethiopia. \emph{American Journal of Agricultural Economics}
+Di Falco, Salvatore, Marcella Veronesi, and Mahmud Yesuf. “Does Adaptation to Climate Change Provide Food Security? A Micro-Perspective from Ethiopia.”
+American Journal of Agricultural Economics 93, no. 3 (2011): 829–46. https://doi.org/10.1093/ajae/aar006.
 
-Abdulai (2016) Impact of conservation agriculture technology on
-household welfare in Zambia. \emph{Agricultural Economics} 47:729-741
-(\href{https://onlinelibrary.wiley.com/doi/abs/10.1111/agec.12269}{link here})
+Abdulai, Abdul Nafeo. “Impact of Conservation Agriculture Technology on Household Welfare in Zambia.”
+Agricultural Economics 47, no. 6 (2016): 729–41. https://doi.org/10.1111/agec.12269.
 }

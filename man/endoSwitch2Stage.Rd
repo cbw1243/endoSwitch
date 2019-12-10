@@ -7,11 +7,11 @@
 endoSwitch2Stage(data, OutcomeDep, SelectDep, OutcomeCov, SelectCov)
 }
 \arguments{
-\item{data}{an data frame. Data for running the regression analysis.}
+\item{data}{a data frame. Data for running the regression analysis.}
 
 \item{OutcomeDep}{character. Dependent variable in the outcome equation.}
 
-\item{SelectDep}{character. Dependent variable in the Selection model. The iable must be binary (0 or 1).}
+\item{SelectDep}{character. Dependent variable in the Selection model. The variable must be binary (0 or 1).}
 
 \item{OutcomeCov}{character vector. Covariates in the outcome equation.}
 
@@ -29,6 +29,7 @@ The second stage uses ordinary least squares including the inverse mills ratios 
 estimation results to estimate the outcome equations.
 }
 \examples{
+
 data(ImpactData)
 OutcomeDep <- 'Output'
 SelectDep <- 'CA'
@@ -43,5 +44,5 @@ summary(Results$SecondStageReg.0)
 summary(Results$SecondStageReg.1)
 }
 \references{
-Maddala (1986). Limited-Dependent and Qualitative Variables in Econometrics. Cambridge University Press.
+Maddala, G. S. “Limited-Dependent and Qualitative Variables in Econometrics.” Cambridge Books. Cambridge University Press, 1986.
 }

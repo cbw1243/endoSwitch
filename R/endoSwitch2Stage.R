@@ -6,17 +6,18 @@
 #' The second stage uses ordinary least squares including the inverse mills ratios computed from the first stage
 #' estimation results to estimate the outcome equations.
 #'
-#' @param data an data frame. Data for running the regression analysis.
+#' @param data a data frame. Data for running the regression analysis.
 #' @param OutcomeDep character. Dependent variable in the outcome equation.
-#' @param SelectDep character. Dependent variable in the Selection model. The iable must be binary (0 or 1).
+#' @param SelectDep character. Dependent variable in the Selection model. The variable must be binary (0 or 1).
 #' @param OutcomeCov character vector. Covariates in the outcome equation.
 #' @param SelectCov character vector. Covariates in the selection equation.
 #'
-#' @references Maddala (1986). Limited-Dependent and Qualitative Variables in Econometrics. Cambridge University Press.
+#' @references Maddala, G. S. “Limited-Dependent and Qualitative Variables in Econometrics.” Cambridge Books. Cambridge University Press, 1986.
 #' @return A list containing regression results.
 #'
 #' @export
 #' @examples
+#'
 #' data(ImpactData)
 #' OutcomeDep <- 'Output'
 #' SelectDep <- 'CA'

@@ -4,8 +4,8 @@ Title: Endogenous switching regression estimation
 Version: 1.0.0
 Author: Bowen Chen
 Author@R: c(person('Bowen', 'Chen', email = 'bwchen0719@gmail.com', role = c("aut, "cre""), comment = c(ORCID = "0000-0003-0370-2756")),
-            person('Seong', 'Yun', email = 'seong.yun@msstate.edu', role = 'aut'),
-            person('Benjamin', 'Gramig', email = 'bgramig@illinois.edu', role = 'aut')
+            person('Seong', 'Yun', email = 'seong.yun@msstate.edu', role = 'ctb'),
+            person('Benjamin', 'Gramig', email = 'bgramig@illinois.edu', role = 'ctb')
 Maintainer: Bowen Chen <bwchen0719@gmail.com>
 Description: This package estimates endogenous switching regression models using the full maximum likelihood estimation method and calculates treatment effects.  
 Encoding: UTF-8

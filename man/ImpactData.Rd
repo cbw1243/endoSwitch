@@ -4,11 +4,10 @@
 \name{ImpactData}
 \alias{ImpactData}
 \title{A dataset on adoption of conservation agriculture in Zambia}
-\format{An object of class \code{data.table} (inherits from \code{data.frame}) with 408 rows and 32 columns.}
+\format{An object of class \code{data.table} (inherits from \code{data.frame}) with 408 rows and 31 columns.}
 \source{
-Abdulai (2016) Impact of conservation agriculture technology on
-household welfare in Zambia. \emph{Agricultural Economics} 47:729-741
-(\href{https://onlinelibrary.wiley.com/doi/abs/10.1111/agec.12269}{link here})
+Abdulai, Abdul Nafeo. “Impact of Conservation Agriculture Technology on Household Welfare in Zambia.”
+Agricultural Economics 47, no. 6 (2016): 729–41. https://doi.org/10.1111/agec.12269.
 }
 \usage{
 data(ImpactData)
@@ -21,8 +20,7 @@ data(ImpactData)
 summary(ImpactData)
 }
 \references{
-Abdulai (2016) Impact of conservation agriculture technology on
-household welfare in Zambia. \emph{Agricultural Economics} 47:729-741
-(\href{https://onlinelibrary.wiley.com/doi/abs/10.1111/agec.12269}{link here})
+Abdulai, Abdul Nafeo. “Impact of Conservation Agriculture Technology on Household Welfare in Zambia.”
+Agricultural Economics 47, no. 6 (2016): 729–41. https://doi.org/10.1111/agec.12269.
 }
 \keyword{datasets}

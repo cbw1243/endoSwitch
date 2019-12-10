@@ -2,16 +2,16 @@
 #'
 #' This function calculates average treatment effects and heterogeneity effects from an estimated endogenous switching regression model.
 #'
-#' @param Results Estimated endogenous switching regression model
-#' @param data an data frame. Data for running the regression analysis.
+#' @param Results Estimated endogenous switching regression model.
+#' @param data a data frame. Data for running the regression analysis.
 #' @param OutcomeDep character. Dependent variable in the outcome equation.
-#' @param SelectDep character. Dependent variable in the Selection model. The iable must be binary (0 or 1).
+#' @param SelectDep character. Dependent variable in the Selection model. The variable must be binary (0 or 1).
 #' @param OutcomeCov character vector. Covariates in the outcome equation.
 #' @param SelectCov character vector. Covariates in the selection equation.
-#' @param treatEffect TRUE/FALSE. Show average treatment effects or not.
+#' @param treatEffect TRUE/FALSE. Show average treatment effects or expected outcome values.
 #'
 #'
-#' @return A table that reports the average treatment effects or expected outcome values.
+#' @return A table that reports the average treatment effects or a list of two tables reporting expected outcome values.
 
 
 treatmentEffect <- function(Results, data, OutcomeDep, SelectDep, OutcomeCov, SelectCov, treatEffect){

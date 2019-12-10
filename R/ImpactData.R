@@ -6,13 +6,11 @@
 #'
 #' @keywords datasets
 #'
-#'@references Abdulai (2016) Impact of conservation agriculture technology on
-#'household welfare in Zambia. \emph{Agricultural Economics} 47:729-741
-#' (\href{https://onlinelibrary.wiley.com/doi/abs/10.1111/agec.12269}{link here})
+#'@references Abdulai, Abdul Nafeo. “Impact of Conservation Agriculture Technology on Household Welfare in Zambia.”
+#' Agricultural Economics 47, no. 6 (2016): 729–41. https://doi.org/10.1111/agec.12269.
 #'
-#' @source Abdulai (2016) Impact of conservation agriculture technology on
-#'household welfare in Zambia. \emph{Agricultural Economics} 47:729-741
-#' (\href{https://onlinelibrary.wiley.com/doi/abs/10.1111/agec.12269}{link here})
+#' @source Abdulai, Abdul Nafeo. “Impact of Conservation Agriculture Technology on Household Welfare in Zambia.”
+#' Agricultural Economics 47, no. 6 (2016): 729–41. https://doi.org/10.1111/agec.12269.
 #'
 #' @examples
 #' data(ImpactData)
