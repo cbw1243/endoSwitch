@@ -15,7 +15,7 @@
 #' Though not recommended, users may provide starting values manually. Assume that you have M variables (including the constant) in
 #' the selection equation, and N variables (including the constant) in each outcome equation.
 #' Then you need (M + 2*N + 4) starting values. The first M values are for the variables in the
-#' selection equation (last vvalue for the constant), followed by N values for the outcome equation for the non-treated individuals
+#' selection equation (last value for the constant), followed by N values for the outcome equation for the non-treated individuals
 #' (SelectDep = 0), and another N values for the outcome equation for the treated individuals (SelectDep = 1).
 #' The last four values are: sigma in outcome equation for the non-treated, sigma in outcome equation for the treated,
 #' rho in outcome equation for the non-treated, rho in outcome equation for the treated.
@@ -32,6 +32,7 @@
 #' @param SelectDep character. Dependent variable in the Selection model. The variable must be binary (0 or 1).
 #' @param OutcomeCov character vector. Covariates in the outcome equation.
 #' @param SelectCov character vector. Covariates in the selection equation.
+#' @param Weight optional character. Name of the weight variable in the dataset, or NA (equal weight).
 #' @param treatEffect \code{TRUE}/\code{FALSE}. If \code{TRUE}, average treatment effects will be calculated and returned.
 #' If \code{FALSE}, expected outcome values will be calculated and returned.
 #' @param method character. Maximization method to be used. The default is "BFGS" (for Broyden-Fletcher-Goldfarb-Shanno).
@@ -62,6 +63,7 @@
 #' Agricultural Economics 47, no. 6 (2016): 729–41. https://doi.org/10.1111/agec.12269.
 #'
 #' @export
+#'
 #' @examples
 #' data(ImpactData) # Data are from Abdulai (2016)
 #' OutcomeDep <- 'Output'
@@ -70,16 +72,12 @@
 #' SelectCov <- c('Age', 'Perception')
 #' endoReg <- endoSwitch(ImpactData, OutcomeDep, SelectDep, OutcomeCov, SelectCov)
 #'
-#' summary(endoReg$MLE.Results) # Sigma and Rho are transformed values.
-#'
-#' endoReg$distPar # Display the original distributional parameters
-#'
-#' endoReg$treatEffect # Display the average treatment effects
-#'
-#' summary.endoSwitch(endoReg) # Summarize the regression results
+#' summary(endoReg) # Summarize the regression results
 
-endoSwitch <- function(data, OutcomeDep, SelectDep, OutcomeCov, SelectCov, treatEffect = TRUE, method = 'BFGS', start = NULL,
+endoSwitch <- function(data, OutcomeDep, SelectDep, OutcomeCov, SelectCov, Weight = NA,
+                       treatEffect = TRUE, method = 'BFGS', start = NULL,
                        verbose = FALSE, ...){
+
   if(sum(OutcomeDep %in% colnames(data)) != length(OutcomeDep))
     stop("OutcomeDep must be valid column names in the dataset.")
 
@@ -92,20 +90,31 @@ endoSwitch <- function(data, OutcomeDep, SelectDep, OutcomeCov, SelectCov, treat
   if(sum(SelectCov %in% colnames(data)) != length(SelectCov))
     stop("SelectCov must be valid column names in the dataset.")
 
+  if(!is.na(Weight)){
+    if(sum(Weight %in% colnames(data)) != length(Weight))
+    stop("Weight must be valid column names in the dataset.")
+  }
+
   if(nrow(data) < length(OutcomeCov) + length(SelectCov))
     stop('Too few observations.')
 
   if(identical(OutcomeCov, SelectCov))
     stop('OutcomeCov can not be identical to SelectCov.')
 
+  if(is.na(Weight)){
+    covNames <- base::unique(c(OutcomeDep, SelectDep, OutcomeCov, SelectCov))
+  }else{
+    covNames <- base::unique(c(OutcomeDep, SelectDep, OutcomeCov, SelectCov, Weight))
+  }
+
   data <- data.table::as.data.table(data)
-  data <- data[, base::unique(c(OutcomeDep, SelectDep, OutcomeCov, SelectCov)), with = FALSE]
+  data <- data[, covNames, with = FALSE]
   nrowData <- nrow(data)
 
   data <- stats::na.omit(data)
   if(nrow(data) < nrowData) cat('Observations with NA values have been discarded.')
 
-  if(sum(apply(data, 2, is.numeric)) < length(base::unique(c(OutcomeDep, SelectDep, OutcomeCov, SelectCov))))
+  if(sum(apply(data, 2, is.numeric)) < length(covNames))
     stop('All Selected columns must be numeric.')
 
   SelectValue <- unlist(data[, SelectDep, with = FALSE])
@@ -127,6 +136,7 @@ endoSwitch <- function(data, OutcomeDep, SelectDep, OutcomeCov, SelectCov, treat
   assign('SelectDep', SelectDep, envir)
   assign('OutcomeCov', OutcomeCov, envir)
   assign('SelectCov', SelectCov, envir)
+  assign('Weight', Weight, envir)
 
   assign('OutcomeParNum', length(OutcomeCov) + 1, envir)
   assign('SelectParNum', length(SelectCov) + 1, envir)
@@ -165,5 +175,6 @@ endoSwitch <- function(data, OutcomeDep, SelectDep, OutcomeCov, SelectCov, treat
   distPar = calcPar(mle.results)
 
   out <- list(MLE.Results = mle.results, distPar = distPar, treatEffect = treatEffectResult)
+  class(out) <- 'endoSwitch'
   out
 }

@@ -29,7 +29,15 @@ maxLogFunc <- function(param){
   eta1 <- (SelectCovSum1 + rho1*OutcomeRes1/sigma1)/sqrt(1-rho1^2)
   eta0 <- (SelectCovSum0 + rho0*OutcomeRes0/sigma0)/sqrt(1-rho0^2)
 
-  LogLike <- sum(log(stats::pnorm(eta1)) + log(stats::dnorm(OutcomeRes1/sigma1)/sigma1)) + sum(log(1 - stats::pnorm(eta0)) + log(stats::dnorm(OutcomeRes0/sigma0)/sigma0))
+  if(is.na(Weight)){
+    WeightValue <- rep(1, nrow(data))
+  }else{
+    WeightValue <- unlist(data[, Weight, with = F])
+  }
+
+  LogLike <- sum(WeightValue[SelectLabel]*(log(stats::pnorm(eta1)) + log(stats::dnorm(OutcomeRes1/sigma1)/sigma1))) +
+    sum(WeightValue[-SelectLabel]*(log(1 - stats::pnorm(eta0)) + log(stats::dnorm(OutcomeRes0/sigma0)/sigma0)))
+
   if(isTRUE(envir$verbose)) cat('Searching for Maximum Joint log-likelihood value:', LogLike, '\r')
   return(LogLike)
 }

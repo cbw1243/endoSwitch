@@ -1,11 +1,15 @@
 #' Summarize the endogenous switching regression results.
 #'
 #' @param object Estimated endogenous switching regression model.
+#' @param ... Other elements.
 #'
 #' @return A list containing the key regression results.
+#'
 #' @export
 #'
-summary.endoSwitch <- function(object){
+summary.endoSwitch <- function(object, ...){
+  if(!inherits(object, "endoSwitch"))
+    stop("'summary.endoSwitch' called on a non-'endoSwitch' object")
 
   coefEst <- object$MLE.Results$estimate
   coefSD <- sqrt(-diag(solve(object$MLE.Results$hessian)))
@@ -21,7 +25,7 @@ summary.endoSwitch <- function(object){
   row.names(results)[(nrow(results) - 3):nrow(results)] <- c('Outcome.0.Sigma', 'Outcome.1.Sigma',
                                                              'Outcome.0.Rho', 'Outcome.1.Rho')
   treatEffect <- object$treatEffect
-  if(is.list(treatEffect)){treatEffect <- 'Treatment effects are not calculated. Use treatEffect = T to calculate them'}
+  if(!is.data.frame(treatEffect)){treatEffect <- 'Treatment effects are not calculated. Use treatEffect = T to calculate them'}
 
   summary <- list(maxinType = object$MLE.Results$type,
                   iterations = object$MLE.Results$iterations,
@@ -31,6 +35,7 @@ summary.endoSwitch <- function(object){
                   constrains = object$MLE.Results$constraints,
                   estimate = results,
                   treatmentEffect = treatEffect)
+  class(summary) <- "summary.endoSwitch"
   summary
 }
 

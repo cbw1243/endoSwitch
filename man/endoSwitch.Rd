@@ -10,6 +10,7 @@ endoSwitch(
   SelectDep,
   OutcomeCov,
   SelectCov,
+  Weight = NA,
   treatEffect = TRUE,
   method = "BFGS",
   start = NULL,
@@ -27,6 +28,8 @@ endoSwitch(
 \item{OutcomeCov}{character vector. Covariates in the outcome equation.}
 
 \item{SelectCov}{character vector. Covariates in the selection equation.}
+
+\item{Weight}{optional character. Name of the weight variable in the dataset, or NA (equal weight).}
 
 \item{treatEffect}{\code{TRUE}/\code{FALSE}. If \code{TRUE}, average treatment effects will be calculated and returned.
 If \code{FALSE}, expected outcome values will be calculated and returned.}
@@ -65,7 +68,7 @@ searches for starting values for maximization using the results from two-stage e
 Though not recommended, users may provide starting values manually. Assume that you have M variables (including the constant) in
 the selection equation, and N variables (including the constant) in each outcome equation.
 Then you need (M + 2*N + 4) starting values. The first M values are for the variables in the
-selection equation (last vvalue for the constant), followed by N values for the outcome equation for the non-treated individuals
+selection equation (last value for the constant), followed by N values for the outcome equation for the non-treated individuals
 (SelectDep = 0), and another N values for the outcome equation for the treated individuals (SelectDep = 1).
 The last four values are: sigma in outcome equation for the non-treated, sigma in outcome equation for the treated,
 rho in outcome equation for the non-treated, rho in outcome equation for the treated.
@@ -83,11 +86,8 @@ SelectDep <- 'CA'
 OutcomeCov <- c('Age')
 SelectCov <- c('Age', 'Perception')
 endoReg <- endoSwitch(ImpactData, OutcomeDep, SelectDep, OutcomeCov, SelectCov)
-summary(endoReg$MLE.Results) # Sigma and Rho are transformed values.
 
-endoReg$distPar # Display the original distributional parameters
-
-endoReg$treatEffect # Display the average treatment effects
+summary(endoReg) # Summarize the regression results
 }
 \references{
 Lokshin, Michael, and Roger B. Newson. “Impact of Interventions on Discrete Outcomes: Maximum Likelihood Estimation
