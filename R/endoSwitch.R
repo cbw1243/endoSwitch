@@ -69,11 +69,14 @@
 #' OutcomeCov <- c('Age')
 #' SelectCov <- c('Age', 'Perception')
 #' endoReg <- endoSwitch(ImpactData, OutcomeDep, SelectDep, OutcomeCov, SelectCov)
+#'
 #' summary(endoReg$MLE.Results) # Sigma and Rho are transformed values.
 #'
 #' endoReg$distPar # Display the original distributional parameters
 #'
 #' endoReg$treatEffect # Display the average treatment effects
+#'
+#' summary.endoSwitch(endoReg) # Summarize the regression results
 
 endoSwitch <- function(data, OutcomeDep, SelectDep, OutcomeCov, SelectCov, treatEffect = TRUE, method = 'BFGS', start = NULL,
                        verbose = FALSE, ...){
