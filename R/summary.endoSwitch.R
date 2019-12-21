@@ -3,7 +3,8 @@
 #' @param object Estimated endogenous switching regression model.
 #'
 #' @return A list containing the key regression results.
-
+#' @export
+#'
 summary.endoSwitch <- function(object){
 
   coefEst <- object$MLE.Results$estimate
