@@ -38,6 +38,6 @@ maxLogFunc <- function(param){
   LogLike <- sum(WeightValue[SelectLabel]*(log(stats::pnorm(eta1)) + log(stats::dnorm(OutcomeRes1/sigma1)/sigma1))) +
     sum(WeightValue[-SelectLabel]*(log(1 - stats::pnorm(eta0)) + log(stats::dnorm(OutcomeRes0/sigma0)/sigma0)))
 
-  if(isTRUE(envir$verbose)) cat('Searching for Maximum Joint log-likelihood value:', LogLike, '\r')
+  if(isTRUE(envir$verbose)) cat('Searching for maximum value of the log-likelihood function:', LogLike, '\r')
   return(LogLike)
 }

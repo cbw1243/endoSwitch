@@ -63,15 +63,15 @@ endoSwitch2Stage <- function(data, OutcomeDep, SelectDep, OutcomeCov, SelectCov)
 
   sigma1Est <- (sum(RegS2_Adt1$residuals^2 + stats::coef(RegS2_Adt1)['MillsRatioAdt1']^2*MillsRatioAdt1*Pred1))/length(MillsRatioAdt1)
   if(sigma1Est <= 0) {
-    warning('2 stage estimation failed, negative sigma1 found')
-    sigma0Est <- 1
+    warning('2 stage estimation failed, negative sigma1 found. Set to be 0.1.')
+    sigma1Est <- 0.1
   }
   sigma1Est <- sigma1Est^.5
 
   sigma0Est <- (sum(RegS2_Adt0$residuals^2 + stats::coef(RegS2_Adt0)['MillsRatioAdt0']^2*MillsRatioAdt0*Pred0))/length(MillsRatioAdt0)
   if(sigma0Est <= 0) {
-    warning('2 stage estimation failed, negative sigma0 found')
-    sigma0Est <- 1
+    warning('2 stage estimation failed, negative sigma0 found. Set to be 0.1.')
+    sigma0Est <- 0.1
   }
   sigma0Est <- sigma0Est^.5
 
