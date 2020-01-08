@@ -2,7 +2,7 @@
 % Please edit documentation in R/endoSwitch.R
 \name{endoSwitch}
 \alias{endoSwitch}
-\title{Endogenous switching regression}
+\title{Endogenous Switching Regression Models}
 \usage{
 endoSwitch(
   data,
@@ -53,7 +53,7 @@ average treatment effects or a list of expected outcome values, depending on use
 }
 \description{
 This is the main interface for the endoSwitch package to estimate the endogenous switching regression
-model (Heckman, 1979).
+models (Heckman, 1979).
 }
 \details{
 This function estimates the endogenous switching regression model using the full maximum likelihood estimation

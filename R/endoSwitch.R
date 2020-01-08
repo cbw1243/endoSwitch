@@ -1,7 +1,7 @@
-#' Endogenous switching regression
+#' Endogenous Switching Regression Models
 #'
 #' This is the main interface for the endoSwitch package to estimate the endogenous switching regression
-#' model (Heckman, 1979).
+#' models (Heckman, 1979).
 #'
 #' This function estimates the endogenous switching regression model using the full maximum likelihood estimation
 #' method. In this model, a selection equation sorts observation units over two different regimes (e.g., treated and
