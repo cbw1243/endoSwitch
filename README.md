@@ -16,3 +16,6 @@ The package is still under development. I am making regular changes to the packa
 If there is anything wrong, shoot me an email. 
 
 Contact: Bowen Chen, PhD (bwchen@illinois.edu) 
+
+# Acknowledgement     
+The development of this package was supported by USDA-NRCS Agreement No. NR193A750016C001 through the Cooperative Ecosystem Studies Units network. Any opinions, findings, conclusions, or recommendations expressed are those of the author(s) and do not necessarily reflect the view of the U.S. Department of Agriculture. 
